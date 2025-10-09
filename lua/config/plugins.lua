@@ -37,7 +37,6 @@ local lazy = {
     "hrsh7th/cmp-path",
     "hrsh7th/cmp-cmdline",
     "hrsh7th/nvim-cmp",
-    "ellisonleao/glow.nvim",
 
     -- Snippets
     {
@@ -56,7 +55,6 @@ local lazy = {
         config = true,
     },
     "windwp/nvim-ts-autotag",
-    "toppair/peek.nvim",
 }
 
 return lazy

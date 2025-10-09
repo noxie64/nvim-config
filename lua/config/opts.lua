@@ -37,3 +37,6 @@ vim.o.wrap = true
 vim.o.linebreak = true
 vim.o.breakindent = true
 vim.o.showbreak = '↳ '
+
+-- set spell lang hallo
+vim.opt.spelllang = { 'de', 'en' }

@@ -1,15 +1,15 @@
-local null_ls = require('null-ls')
+local null_ls = require("null-ls")
 local mason_null_ls = require("mason-null-ls")
 
 mason_null_ls.setup({
-  ensure_installed = {
-    "prettier",    -- JS/TS formatter
-    "eslint_d",    -- JS/TS linter
-    "black",       -- Python formatter
-    "stylua",      -- Lua formatter
-  },
-  automatic_installation = true,
-  automatic_setup = true,
+    ensure_installed = {
+        "prettier", -- JS/TS formatter
+        "eslint_d", -- JS/TS linter
+        "black",    -- Python formatter
+        "stylua",   -- Lua formatter
+    },
+    automatic_installation = true,
+    automatic_setup = true,
 })
 
 local formatters = {
@@ -21,25 +21,30 @@ local formatters = {
     },
 }
 
-
-local mason_registry = require('mason-registry')
+local mason_registry = require("mason-registry")
 for k, v in pairs(formatters) do
     local tool = mason_registry.get_package(k)
 
     if not tool:is_installed() then
-        vim.notify('Installing ' .. k .. '...')
+        vim.notify("Installing " .. k .. "...")
         tool:install()
-        vim.notify('Done')
+        vim.notify("Done")
     end
+end
+
+local cspell_pkg = mason_registry.get_package("cspell")
+if not cspell_pkg:is_installed() then
+    vim.notify("Installing cspell...")
+    cspell_pkg:install()
+    vim.notify("Done")
 end
 
 local sources = {}
 
-
 for k, v in pairs(formatters) do
-    table.insert(sources, null_ls.builtins.formatting[k].with(v)) 
+    table.insert(sources, null_ls.builtins.formatting[k].with(v))
 end
 
 null_ls.setup({
-    sources = sources
+    sources = sources,
 })

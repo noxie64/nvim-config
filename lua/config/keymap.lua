@@ -2,7 +2,7 @@ local map = vim.keymap.set
 local opts = { silent = true, noremap = true }
 
 -- Nvim-Tree
-vim.keymap.set("n", "<leader>pf", ":NvimTreeToggle<CR>", { silent = true })
+map("n", "<leader>pf", ":NvimTreeToggle<CR>", { silent = true })
 
 -- Harpoon
 local harpoon_mark = require("harpoon.mark")
@@ -53,27 +53,29 @@ map("n", "<leader><Tab>", harpoon_ui.nav_next)
 
 -- Telescope
 local builtin = require("telescope.builtin")
-vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
-vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
-vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
-vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
+map("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+map("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
+map("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
+map("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
 
 --  nvim-lspconfig
-vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-vim.keymap.set("n", "gD", vim.lsp.buf.type_definition, opts)
-vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-vim.keymap.set("n", "f", vim.lsp.buf.format, opts)
+map("n", "gd", vim.lsp.buf.definition, opts)
+map("n", "gD", vim.lsp.buf.type_definition, opts)
+map("n", "gD", vim.lsp.buf.declaration, opts)
+map("n", "gr", vim.lsp.buf.references, opts)
+map("n", "gi", vim.lsp.buf.implementation, opts)
+map("n", "K", vim.lsp.buf.hover, opts)
+map("n", "f", vim.lsp.buf.format, opts)
 
 -- code actions
-vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 
 function ToggleSpell()
     vim.o.spell = not vim.o.spell
     print("Spell checking " .. (vim.o.spell and "enabled" or "disabled"))
 end
 
-vim.keymap.set({ "n", "v" }, "<leader>ll", ToggleSpell)
+map({ "n", "v" }, "<leader>ll", ToggleSpell)
 
+-- examine lsp errors
+map("n", "<A-p>", vim.diagnostic.open_float)

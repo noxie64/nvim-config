@@ -55,6 +55,7 @@ local lazy = {
         config = true,
     },
     "windwp/nvim-ts-autotag",
+    "iamcco/markdown-preview.nvim",
 }
 
 return lazy

@@ -66,7 +66,7 @@ map("n", "gr", vim.lsp.buf.references, opts)
 map("n", "gi", vim.lsp.buf.implementation, opts)
 map("n", "K", vim.lsp.buf.hover, opts)
 map("n", "f", vim.lsp.buf.format, opts)
-
+map("n", "<leader>r", vim.lsp.buf.rename, opts)
 -- code actions
 map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 

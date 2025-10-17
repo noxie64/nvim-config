@@ -7,6 +7,7 @@ mason_null_ls.setup({
         "eslint_d", -- JS/TS linter
         "black",    -- Python formatter
         "stylua",   -- Lua formatter
+        "yamlfmt",  -- Yaml formatter
     },
     automatic_installation = true,
     automatic_setup = true,
@@ -19,25 +20,10 @@ local formatters = {
     prettier = {
         extra_args = { "--use-tabs", "false", "--tab-width", vim.opt.tabstop },
     },
+    yamlfmt = {
+        filetypes = { "yaml", "yml" },
+    }
 }
-
-local mason_registry = require("mason-registry")
-for k, v in pairs(formatters) do
-    local tool = mason_registry.get_package(k)
-
-    if not tool:is_installed() then
-        vim.notify("Installing " .. k .. "...")
-        tool:install()
-        vim.notify("Done")
-    end
-end
-
-local cspell_pkg = mason_registry.get_package("cspell")
-if not cspell_pkg:is_installed() then
-    vim.notify("Installing cspell...")
-    cspell_pkg:install()
-    vim.notify("Done")
-end
 
 local sources = {}
 

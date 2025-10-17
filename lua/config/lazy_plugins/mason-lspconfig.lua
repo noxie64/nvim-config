@@ -21,9 +21,6 @@ local handlers = {
     ["html"] = function()
         lspconfig.html.setup({
             capabilities = capabilities,
-            on_attach = function(client, bufnr)
-                print("HTML LSP attached to buffer " .. bufnr)
-            end,
             settings = {
                 html = {
                     format = {

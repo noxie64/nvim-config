@@ -10,8 +10,8 @@ map('n', '<leader>k', '<C-w>k')
 map('n', '<leader>l', '<C-w>l')
 
 -- Searching
-map('n', '<leader>s', ':%s/')
-map('n', '<leader>S', ':s/')
+map('n', '<leader>S', ':%s/')
+map('n', '<leader>s', ':/')
 map('n', '<Esc>', ':noh<CR>', { silent = true })
 
 -- Undo / redo

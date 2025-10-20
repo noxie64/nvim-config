@@ -3,7 +3,7 @@ vim.opt.mouse = ''
 
 -- colorscheme
 vim.o.background = 'dark'
-colorscheme = 'duskfox'
+colorscheme = 'gruvbox'
 vim.o.termguicolors = true
 local isOK, err = pcall(vim.cmd, 'colorscheme ' .. colorscheme)
 if not isOK then

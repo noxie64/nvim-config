@@ -56,6 +56,7 @@ local lazy = {
     },
     "windwp/nvim-ts-autotag",
     "iamcco/markdown-preview.nvim",
+    "ellisonleao/gruvbox.nvim",
 }
 
 return lazy

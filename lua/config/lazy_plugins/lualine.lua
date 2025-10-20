@@ -1,4 +1,4 @@
-local theme = require('lualine.themes.horizon')
+local theme = require('lualine.themes.gruvbox_dark')
 
 require('lualine').setup {
   options = {

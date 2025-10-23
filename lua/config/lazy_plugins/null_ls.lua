@@ -8,6 +8,8 @@ mason_null_ls.setup({
         "black",    -- Python formatter
         "stylua",   -- Lua formatter
         "yamlfmt",  -- Yaml formatter
+        "shellcheck",
+        "shfmt"
     },
     automatic_installation = true,
     automatic_setup = true,

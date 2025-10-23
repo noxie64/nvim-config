@@ -1,7 +1,6 @@
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-
 local lsp_server = {
     "lua_ls",
     "clangd",
@@ -9,7 +8,8 @@ local lsp_server = {
     "cssls",
     "ts_ls",
     "jsonls",
-    "pyright"
+    "pyright",
+    "bashls",
 }
 
 local lspconfig = require("lspconfig")
@@ -34,6 +34,21 @@ local handlers = {
                         documentation = true, -- Enable hover documentation
                         references = true, -- Enable hover references
                     },
+                },
+            },
+        })
+    end,
+    ["bashls"] = function()
+        lspconfig.bashls.setup({
+            capabilities = capabilities,
+            filetypes = { "sh", "bash", "zsh" },
+            cmd = { "bash-language-server", "start" },
+            settings = {
+                bashIde = {
+                    shellcheckPath = "shellcheck", -- diagnostic tool
+                    shellcheckArguments = { "-x" }, -- follow sourced files
+                    shfmtPath = "shfmt", -- formatter tool
+                    shfmtExtraArgs = { "-i", "2", "-ci" }, -- 2-space indent, indent case branches
                 },
             },
         })

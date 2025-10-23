@@ -55,8 +55,18 @@ local lazy = {
         config = true,
     },
     "windwp/nvim-ts-autotag",
-    "iamcco/markdown-preview.nvim",
+
+    -- Other
+    {
+        "iamcco/markdown-preview.nvim",
+        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        ft = { "markdown" },
+        build = function()
+            vim.fn["mkdp#util#install"]()
+        end,
+    },
     "ellisonleao/gruvbox.nvim",
+    "folke/todo-comments.nvim",
 }
 
 return lazy

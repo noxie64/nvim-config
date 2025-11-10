@@ -58,6 +58,9 @@ map("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
 map("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
 map("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
 
+-- Todos
+map("n", "<leader>ft", ':TodoTelescop<CR>')
+map("n", "<leader>qt", ':TodoQuickFix<CR>')
 --  nvim-lspconfig
 map("n", "gd", vim.lsp.buf.definition, opts)
 map("n", "gD", vim.lsp.buf.type_definition, opts)

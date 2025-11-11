@@ -10,7 +10,8 @@ local lsp_server = {
     "jsonls",
     "pyright",
     "bashls",
-    "rust_analyzer"
+    "rust_analyzer",
+    "texlab"
 }
 
 local lspconfig = require("lspconfig")

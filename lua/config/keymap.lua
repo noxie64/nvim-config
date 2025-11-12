@@ -59,8 +59,8 @@ map("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
 map("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
 
 -- Todos
-map("n", "<leader>ft", ':TodoTelescop<CR>')
-map("n", "<leader>qt", ':TodoQuickFix<CR>')
+map("n", "<leader>ft", ":TodoTelescop<CR>")
+map("n", "<leader>qt", ":TodoQuickFix<CR>")
 --  nvim-lspconfig
 map("n", "gd", vim.lsp.buf.definition, opts)
 map("n", "gD", vim.lsp.buf.type_definition, opts)
@@ -73,12 +73,10 @@ map("n", "<leader>r", vim.lsp.buf.rename, opts)
 -- code actions
 map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 
-function ToggleSpell()
+map({ "n", "v" }, "<leader>ll", function()
     vim.o.spell = not vim.o.spell
     print("Spell checking " .. (vim.o.spell and "enabled" or "disabled"))
-end
-
-map({ "n", "v" }, "<leader>ll", ToggleSpell)
+end)
 
 -- examine lsp errors
 map("n", "<A-p>", vim.diagnostic.open_float)

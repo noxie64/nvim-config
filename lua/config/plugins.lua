@@ -74,18 +74,9 @@ local lazy = {
             vim.g.vimtex_view_method = "zathura"
             vim.g.vimtex_compiler_method = "latexmk"
             vim.g.vimtex_compiler_latexmk = {
-                build_dir = ".tex_build", -- optional: separate build dir
-                callback = 1,
-                continuous = 1,
-                executable = "latexmk",
-                options = {
-                    "-pdf",
-                    "-shell-escape", -- very important for minted!
-                    "-verbose",
-                    "-interaction=nonstopmode",
-                },
+                out_dir = ".latex_build"
             }
-        end,
+                       end,
     },
 }
 

@@ -14,11 +14,21 @@ snippet = {
   end,
 },
 mapping = cmp.mapping.preset.insert({
-  ['<C-k>'] = cmp.mapping.scroll_docs(-4),
-  ['<C-j>'] = cmp.mapping.scroll_docs(4),
+  ['<C-k>'] = function ()
+    if cmp.visible_docs() then
+        cmp.mapping.scroll_docs(-4)
+    else
+        cmp.select_prev_item()
+    end
+  end,
+  ['<C-j>'] = function ()
+    if cmp.visible_docs() then
+        cmp.mapping.scroll_docs(4)
+    else
+        cmp.select_next_item()
+    end
+  end,
   ['<C-Space>'] = cmp.mapping.complete(),
-  ['<A-j>'] = cmp.mapping.select_next_item(),
-  ['<A-k>'] = cmp.mapping.select_prev_item(),
   ['<Esc>'] = cmp.mapping.abort(),
   ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
   ['<C-p>'] = function ()

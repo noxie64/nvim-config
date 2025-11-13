@@ -27,12 +27,7 @@ end)
 
 -- remove file from harpoon
 map("n", "<leader>pr", function()
-    local idx = harpoon.ui.get_current_index()
-    if idx then
-        harpoon:list():remove(idx)
-    else
-        vim.notify("No file selected in Harpoon menu")
-    end
+    harpoon:list():remove(idx)
     initTabbar()
 end)
 

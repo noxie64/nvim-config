@@ -11,7 +11,8 @@ local lsp_server = {
     "pyright",
     "bashls",
     "rust_analyzer",
-    "texlab"
+    "texlab",
+    "intelephense"
 }
 
 local lspconfig = require("lspconfig")

@@ -11,7 +11,10 @@ local lazy = {
     "nvim-tree/nvim-tree.lua",
     "nvim-treesitter/nvim-treesitter",
     "savq/melange-nvim",
-    "ThePrimeagen/harpoon",
+    {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2"
+    },
     "nvim-lua/plenary.nvim",
     {
         "nvim-telescope/telescope.nvim",
@@ -74,9 +77,9 @@ local lazy = {
             vim.g.vimtex_view_method = "zathura"
             vim.g.vimtex_compiler_method = "latexmk"
             vim.g.vimtex_compiler_latexmk = {
-                out_dir = ".latex_build"
+                out_dir = ".latex_build",
             }
-                       end,
+        end,
     },
 }
 

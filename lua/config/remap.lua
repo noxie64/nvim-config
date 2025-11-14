@@ -4,10 +4,13 @@ vim.g.maplocalleader = ' '
 local map = vim.keymap.set
 
 -- Window-switching
-map('n', '<leader>h', '<C-w>h')
-map('n', '<leader>j', '<C-w>j')
-map('n', '<leader>k', '<C-w>k')
-map('n', '<leader>l', '<C-w>l')
+map('n', '<C-h>', '<C-w>h')
+map('n', '<C-j>', '<C-w>j')
+map('n', '<C-k>', '<C-w>k')
+map('n', '<C-l>', '<C-w>l')
+
+-- Closing
+map('n', '<A-q>', ':q<CR>', { silent = true })
 
 -- Searching
 map('n', '<leader>S', ':%s/')

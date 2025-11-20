@@ -13,7 +13,7 @@ local lazy = {
     "savq/melange-nvim",
     {
         "ThePrimeagen/harpoon",
-        branch = "harpoon2"
+        branch = "harpoon2",
     },
     "nvim-lua/plenary.nvim",
     {
@@ -22,7 +22,7 @@ local lazy = {
     },
     {
         "nvim-telescope/telescope-file-browser.nvim",
-        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
     },
     {
         "MaximilianLloyd/ascii.nvim",
@@ -81,7 +81,11 @@ local lazy = {
             vim.g.vimtex_view_method = "zathura"
             vim.g.vimtex_compiler_method = "latexmk"
             vim.g.vimtex_compiler_latexmk = {
-                out_dir = ".latex_build",
+                build_dir = ".latex_build",
+                aux_dir = ".latex_build",
+                options = {
+                    "-shell-escape",
+                },
             }
         end,
     },

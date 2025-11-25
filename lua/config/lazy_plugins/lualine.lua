@@ -1,4 +1,4 @@
-local theme = require('lualine.themes.gruvbox_dark')
+local theme = require('lualine.themes.' .. vim.g.colors_name)
 
 require('lualine').setup {
   options = {

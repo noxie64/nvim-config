@@ -10,7 +10,7 @@ map('n', '<C-k>', '<C-w>k')
 map('n', '<C-l>', '<C-w>l')
 
 -- Closing
-map('n', '<A-q>', ':q<CR>', { silent = true })
+map('n', 'h', ':q<CR>', { silent = true })
 
 -- Searching
 map('n', '<leader>S', ':%s/')

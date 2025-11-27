@@ -4,13 +4,13 @@ vim.g.maplocalleader = ' '
 local map = vim.keymap.set
 
 -- Window-switching
-map('n', '<C-h>', '<C-w>h')
-map('n', '<C-j>', '<C-w>j')
-map('n', '<C-k>', '<C-w>k')
-map('n', '<C-l>', '<C-w>l')
+map('n', '<A-h>', '<C-w>h')
+map('n', '<A-j>', '<C-w>j')
+map('n', '<A-k>', '<C-w>k')
+map('n', '<A-l>', '<C-w>l')
 
 -- Closing
-map('n', 'h', ':q<CR>', { silent = true })
+map('n', '<A-q>', ':q<CR>', { silent = true })
 
 -- Searching
 map('n', '<leader>S', ':%s/')
@@ -31,3 +31,6 @@ map('n', 'D', '"+dd')
 map('n', 'X', '"+x')
 map('v', 'X', '"+x')
 map('v', 'D', '"+dd')
+
+-- Go to prev buffer
+map('n', '<A-b>', ':bp<CR>', { silent = true })

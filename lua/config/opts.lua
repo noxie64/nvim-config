@@ -14,6 +14,10 @@ elseif ARCH_THEME == "gruvbox" then
     colorscheme = "gruvbox"
 end
 
+-- workaround
+colorscheme = 'retro-theme'
+
+
 local isOK, err = pcall(vim.cmd, "colorscheme " .. colorscheme)
 if not isOK then
     vim.notify(err, vim.log.levels.ERROR, { timeout = 5000 })

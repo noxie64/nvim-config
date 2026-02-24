@@ -15,7 +15,7 @@ elseif ARCH_THEME == "gruvbox" then
 end
 
 -- workaround
-colorscheme = 'retro-theme'
+colorscheme = 'catppuccin-mocha'
 
 
 local isOK, err = pcall(vim.cmd, "colorscheme " .. colorscheme)

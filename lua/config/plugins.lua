@@ -114,6 +114,7 @@ local lazy = {
             require("dbee").install()
         end,
     },
+    "tomasr/molokai"
 }
 
 return lazy

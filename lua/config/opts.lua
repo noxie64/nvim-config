@@ -1,3 +1,5 @@
+NVIM_THEME = require('config.utils').NVIM_THEME
+
 -- disable mouse
 vim.opt.mouse = ""
 
@@ -6,17 +8,12 @@ vim.o.background = "dark"
 vim.o.termguicolors = true
 colorscheme = ""
 
-local ARCH_THEME = os.getenv("ARCH_THEME")
 
-if ARCH_THEME == nil or ARCH_THEME == "onedark" then
-    colorscheme = "onedark"
-elseif ARCH_THEME == "gruvbox" then
-    colorscheme = "gruvbox"
+if NVIM_THEME ~= nil then
+    colorscheme = NVIM_THEME
+elseif NVIM_THEME == nil then
+    colorscheme = 'molokai'
 end
-
--- workaround
-colorscheme = 'molokai'
-
 
 local isOK, err = pcall(vim.cmd, "colorscheme " .. colorscheme)
 if not isOK then

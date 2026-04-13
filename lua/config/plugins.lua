@@ -114,7 +114,8 @@ local lazy = {
             require("dbee").install()
         end,
     },
-    "tomasr/molokai"
+    "tomasr/molokai",
+    "goolord/alpha-nvim",
 }
 
 return lazy

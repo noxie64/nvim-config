@@ -1,7 +1,7 @@
 NVIM_THEME = require('config.utils').NVIM_THEME
 
 if NVIM_THEME == nil then
-    theme = 'lualine.themes.16color'
+    theme = require('lualine.themes.16color')
 else
     theme = require('lualine.themes.' .. NVIM_THEME)
 end

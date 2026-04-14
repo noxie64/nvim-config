@@ -36,6 +36,8 @@ require("lazy").setup({
   checker = { enabled = true },
   rocks = {
     enabled = true,
+    root = vim.fn.stdpath("data") .. "/lazy-rocks",
+    server = "https://lumen-oss.github.io/rocks-binaries/",
     hererocks = true
   }
 })

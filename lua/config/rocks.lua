@@ -1,5 +1,5 @@
 local rocks = {
-    'lua-curl'
+    'magick'
 }
 
 return rocks

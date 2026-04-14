@@ -125,7 +125,12 @@ local lazy = {
             rocks = require("config.rocks"),
         },
     },
-
+    {
+        "3rd/image.nvim",
+        opts = {
+            backend = "kitty", -- change to "ueberzug" if not using Kitty
+        },
+    },
 }
 
 return lazy

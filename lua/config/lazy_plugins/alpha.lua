@@ -1,61 +1,156 @@
-if os.getenv('SYS_THEME') ~= "awsm" then
+if os.getenv("SYS_THEME") ~= "awsm" then
     return
 end
 
 local alpha = require("alpha")
-local dashboard = require("alpha.themes.dashboard")
-
-local lines = {}
-
-local logo = [[
-                __
-  ___   __  __ /\_\    ___ ___
-/' _ `\/\ \/\ \\/\ \ /' __` __`\
-/\ \/\ \ \ \_/ |\ \ \/\ \/\ \/\ \
-\ \_\ \_\ \___/  \ \_\ \_\ \_\ \_\
- \/_/\/_/\/__/    \/_/\/_/\/_/\/_/
-]]
-
-for line in logo:gmatch("[^\n]+") do
-    table.insert(lines, line)
+local function padding(n)
+    return { type = "padding", val = n }
 end
 
-dashboard.section.header.val = lines
-dashboard.section.buttons.val = {}
+-- Highlight-groups --
+vim.api.nvim_set_hl(0, "Quote", { italic = true, link = "Comment" })
+
+local logo = {
+    type = "text",
+    val = {
+        [[                __]],
+        [[  ___   __  __ /\_\    ___ ___]],
+        [[/' _ `\/\ \/\ \\/\ \ /' __` __`\]],
+        [[/\ \/\ \ \ \_/ |\ \ \/\ \/\ \/\ \]],
+        [[\ \_\ \_\ \___/  \ \_\ \_\ \_\ \_\]],
+        [[ \/_/\/_/\/__/    \/_/\/_/\/_/\/_/]],
+    },
+    opts = {
+        hl = "Keyword",
+        position = "center",
+    },
+}
 
 local quote_api = "https://zenquotes.io/api/random"
-function display_erro()
-    dashboard.section.footer.val = "The philosophers are not availble right now."
+
+local quote_grp = {
+    type = "group",
+    spacing = 0,
+    val = {},
+    opts = {},
+}
+
+local function quote_simple(quote_str)
+    quote_grp.val = {
+        {
+            type = "text",
+            val = quote_str,
+            opts = {
+                position = "center",
+                hl = "Quote",
+            },
+        },
+    }
 end
 
-dashboard.section.footer.val = "Loading quote..."
+quote_simple("Loading quote...")
 
 local curl = require("plenary.curl")
-curl.get( quote_api, {
+curl.get(quote_api, {
     callback = function(response)
         if response.status == 200 then
             local data = vim.json.decode(response.body)
-            dashboard.section.footer.val = {
-                data[1].q,
-                "— " .. data[1].a,
-            }
+            vim.schedule(function()
+                local author_padding = ""
+                local author = "- " .. data[1].a
+                local quote_resp = ""
+
+                local max_width = math.floor(vim.o.columns * 0.7 + .5)
+                local len = 0
+                local quote_lines = {}
+
+                for i = 1, #data[1].q - 1 do
+                    if i == max_width then
+                        print("AHHH")
+                        if quote_resp:sub(#quote_resp, #quote_resp) ~= " " then
+                            for j = i, 0, -1 do
+                                if quote_resp:sub(j, j) == " " then
+                                    quote_resp = quote_resp:sub(1, j - 1) .. "\n" .. quote_resp:sub(j + 1, #quote_resp)
+                                    if j > len then
+                                        len = j - 1
+                                    end
+                                    break
+                                end
+                            end
+                        else
+                            quote_resp = quote_resp .. "\n"
+                        end
+                    end
+
+                    quote_resp = quote_resp .. data[1].q:sub(i, i)
+                end
+                if len == 0 then
+                    len = #quote_resp
+                end
+
+                for _ = 1, len - #author do
+                    author_padding = author_padding .. " "
+                end
+
+                quote_grp.val = {
+                    {
+                        type = "text",
+                        val = quote_resp,
+                        opts = {
+                            hl = "Quote",
+                            position = "center",
+                        },
+                    },
+                    {
+                        type = "text",
+                        val = author_padding .. author,
+                        opts = {
+                            hl = "Quote",
+                            position = "center",
+                        },
+                    },
+                }
+            end)
         else
-            display_erro()
+            quote_simple("The philosophers are not availble right now.")
         end
 
         vim.schedule(function()
             alpha.redraw()
         end)
     end,
-    on_error = function (err)
-        display_erro()
+    on_error = function(err)
+        quote_simple(require("alpha.fortune")())
         vim.schedule(function()
+            print(err)
             alpha.redraw()
         end)
-    end
+    end,
 })
 
-alpha.setup(dashboard.opts)
+local config = {
+    keymap = {
+        {
+            "n",
+            "i",
+            function()
+                local buf = vim.api.nvim_get_current_buf()
+                vim.cmd("enew")
+                vim.cmd("startinsert")
+                pcall(vim.api.nvim_buf_delete, buf, { force = true })
+            end,
+            { noremap = true, silent = true },
+        },
+    },
+    layout = {
+        padding(4),
+        logo,
+        padding(2),
+        quote_grp,
+    },
+}
+
+alpha.setup(config)
 
 -- Draw startup-image
 -- vim.api.nvim_create_autocmd("User", {

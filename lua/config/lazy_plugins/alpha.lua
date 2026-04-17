@@ -56,17 +56,17 @@ curl.get(quote_api, {
         if response.status == 200 then
             local data = vim.json.decode(response.body)
             vim.schedule(function()
+                quote_grp.val = {}
                 local author_padding = ""
                 local author = "- " .. data[1].a
                 local quote_resp = ""
 
-                local max_width = math.floor(vim.o.columns * 0.7 + .5)
+                local max_width = math.floor(vim.o.columns * 0.7 + 0.5)
                 local len = 0
-                local quote_lines = {}
+                data[1].q = data[1].q .. "."
 
                 for i = 1, #data[1].q - 1 do
                     if i == max_width then
-                        print("AHHH")
                         if quote_resp:sub(#quote_resp, #quote_resp) ~= " " then
                             for j = i, 0, -1 do
                                 if quote_resp:sub(j, j) == " " then
@@ -88,28 +88,25 @@ curl.get(quote_api, {
                     len = #quote_resp
                 end
 
-                for _ = 1, len - #author do
-                    author_padding = author_padding .. " "
+                author_padding = string.rep(" ", len - #author)
+
+                local lines = vim.split(quote_resp, "\n")
+                for _, line in ipairs(lines) do
+                    table.insert(quote_grp.val, {
+                        type = "text",
+                        val = line .. string.rep(" ", len - #line),
+                        opts = { hl = "Quote", position = "center" },
+                    })
                 end
 
-                quote_grp.val = {
-                    {
-                        type = "text",
-                        val = quote_resp,
-                        opts = {
-                            hl = "Quote",
-                            position = "center",
-                        },
+                table.insert(quote_grp.val, {
+                    type = "text",
+                    val = author_padding .. author,
+                    opts = {
+                        hl = "Quote",
+                        position = "center",
                     },
-                    {
-                        type = "text",
-                        val = author_padding .. author,
-                        opts = {
-                            hl = "Quote",
-                            position = "center",
-                        },
-                    },
-                }
+                })
             end)
         else
             quote_simple("The philosophers are not availble right now.")

@@ -9,10 +9,10 @@ end
 
 -- Highlight-groups --
 vim.api.nvim_set_hl(0, "Quote", { italic = true, link = "Comment" })
-vim.api.nvim_set_hl(0, "Versions", { 
+vim.api.nvim_set_hl(0, "Versions", {
     bg = vim.api.nvim_get_hl(0, { name = "Keyword", link = false }).fg,
     fg = "#000000",
-    bold = true
+    bold = true,
 })
 
 local logo = {
@@ -67,6 +67,7 @@ curl.get(quote_api, {
                 local quote_resp = ""
 
                 local max_width = math.floor(vim.o.columns * 0.7 + 0.5)
+
                 local len = 0
                 data[1].q = data[1].q .. "."
 
@@ -137,14 +138,36 @@ function versions()
         .. "."
         .. vim.fn.api_info().version.patch
     local version_header = "v" .. version_str .. ", " .. _VERSION
-    local header_padding = string.rep(" ", math.floor((vim.o.columns - #version_header) / 2 + .5))
+    local header_padding = string.rep(" ", math.floor((vim.o.columns - #version_header) / 2 + 0.5))
     return {
         type = "text",
         val = header_padding .. version_header,
         opts = {
             position = "left",
-            hl = {{"Versions", #header_padding, #header_padding + #version_header}}
+            hl = { { "Versions", #header_padding, #header_padding + #version_header } },
+        },
+    }
+end
+
+function stats_table()
+    local table_width = math.floor(vim.o.columns / 2)
+    local table_start = math.floor((vim.o.columns - table_width) / 2)
+
+    local function seperator(chr)
+        return {
+            type = "text",
+            val = string.rep(chr, table_width),
+            opts = {
+                hl = "Comment",
+                position = "center",
+            },
         }
+    end
+    return {
+        type = "group",
+        val = {
+            seperator("_"),
+        },
     }
 end
 
@@ -169,6 +192,8 @@ local config = {
         versions(),
         padding(2),
         quote_grp,
+        padding(3),
+        stats_table(),
     },
 }
 

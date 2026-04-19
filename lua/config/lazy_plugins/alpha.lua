@@ -9,6 +9,11 @@ end
 
 -- Highlight-groups --
 vim.api.nvim_set_hl(0, "Quote", { italic = true, link = "Comment" })
+vim.api.nvim_set_hl(0, "Versions", { 
+    bg = vim.api.nvim_get_hl(0, { name = "Keyword", link = false }).fg,
+    fg = "#000000",
+    bold = true
+})
 
 local logo = {
     type = "text",
@@ -125,6 +130,24 @@ curl.get(quote_api, {
     end,
 })
 
+function versions()
+    local version_str = vim.fn.api_info().version.major
+        .. "."
+        .. vim.fn.api_info().version.minor
+        .. "."
+        .. vim.fn.api_info().version.patch
+    local version_header = "v" .. version_str .. ", " .. _VERSION
+    local header_padding = string.rep(" ", math.floor((vim.o.columns - #version_header) / 2 + .5))
+    return {
+        type = "text",
+        val = header_padding .. version_header,
+        opts = {
+            position = "left",
+            hl = {{"Versions", #header_padding, #header_padding + #version_header}}
+        }
+    }
+end
+
 local config = {
     keymap = {
         {
@@ -142,6 +165,8 @@ local config = {
     layout = {
         padding(4),
         logo,
+        padding(1),
+        versions(),
         padding(2),
         quote_grp,
     },

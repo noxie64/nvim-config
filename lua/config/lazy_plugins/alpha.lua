@@ -8,7 +8,10 @@ local function padding(n)
 end
 
 -- Highlight-groups --
-vim.api.nvim_set_hl(0, "Quote", { italic = true, link = "Comment" })
+vim.api.nvim_set_hl(0, "TableKey", {
+    fg = vim.api.nvim_get_hl(0, { name = "Keyword", link = false }).fg,
+    bold = true
+})
 vim.api.nvim_set_hl(0, "Versions", {
     bg = vim.api.nvim_get_hl(0, { name = "Keyword", link = false }).fg,
     fg = "#000000",
@@ -63,10 +66,69 @@ local function stats_table()
             },
         }
     end
+
+    local function space_between(start_el, end_el)
+        local line = start_el.val
+        local len = vim.fn.strcharlen
+
+        local padding_between = table_width - len(start_el.val) - len(end_el.val)
+        line = line .. string.rep(" ", padding_between)
+        line = line .. end_el.val
+
+
+        return {
+            type = "text",
+            val = line,
+            opts = {
+                hl = {
+                    {start_el.hl, 0, len(start_el.val)},
+                    {end_el.hl, len(start_el.val) + padding_between, len(start_el.val) + padding_between + len(end_el.val)}
+                },
+                position = "center"
+            }
+        }
+    end
+
+    local function os_info()
+        local os_str = vim.fn.system("uname -r"):gsub("%s$", "")
+        local os_hl = ""
+        if vim.v.shell_error ~= 0 then
+            os_str = "n/a"
+            os_hl = "Comment"
+        end
+
+        if os_str:find("arch") then
+            os_str = "󰣇 " .. os_str
+        end
+
+
+        return space_between(
+            {
+                val = "OS",
+                hl = "TableKey"
+            },
+            {
+                val = os_str,
+                hl = os_hl
+            }
+        )
+    end
+
     return {
         type = "group",
         val = {
             seperator("_"),
+            space_between(
+                {
+                    val = "Test",
+                    hl = "TableKey"
+                },
+                {
+                    val = "Test1",
+                    hl = "Comment"
+                }
+            ),
+            os_info()
         },
     }
 end

@@ -114,21 +114,26 @@ local function stats_table()
         )
     end
 
+    local function loaded_plugins()
+        return space_between(
+            {
+                val = "Lazy Plugins",
+                hl = "TableKey"
+            },
+            {
+                val = "󰒲 " .. #require("lazy").plugins(),
+                hl = ""
+            }
+        )
+    end
+
     return {
         type = "group",
         val = {
             seperator("_"),
-            space_between(
-                {
-                    val = "Test",
-                    hl = "TableKey"
-                },
-                {
-                    val = "Test1",
-                    hl = "Comment"
-                }
-            ),
-            os_info()
+            os_info(),
+            loaded_plugins(),
+            seperator("‾"),
         },
     }
 end

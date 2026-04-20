@@ -131,6 +131,7 @@ local lazy = {
             backend = "kitty", -- change to "ueberzug" if not using Kitty
         },
     },
+    "rubiin/fortune.nvim"
 }
 
 return lazy

@@ -31,107 +31,18 @@ local logo = {
     },
 }
 
-local quote_api = "https://zenquotes.io/api/random"
-
-local quote_grp = {
-    type = "group",
-    spacing = 0,
-    val = {},
-    opts = {},
-}
-
-local function quote_simple(quote_str)
-    quote_grp.val = {
-        {
-            type = "text",
-            val = quote_str,
-            opts = {
-                position = "center",
-                hl = "Quote",
-            },
+local function quote(quote_str)
+    return {
+        type = "text",
+        val = quote_str,
+        opts = {
+            position = "center",
+            hl = "Quote",
         },
     }
 end
 
-quote_simple("Loading quote...")
-
-local curl = require("plenary.curl")
-curl.get(quote_api, {
-    callback = function(response)
-        if response.status == 200 then
-            local data = vim.json.decode(response.body)
-            vim.schedule(function()
-                quote_grp.val = {}
-                local author_padding = ""
-                local author = "- " .. data[1].a
-                local quote_resp = ""
-
-                local max_width = math.floor(vim.o.columns * 0.7 + 0.5)
-
-                local len = 0
-                data[1].q = data[1].q .. "."
-
-                for i = 1, #data[1].q - 1 do
-                    if i == max_width then
-                        if quote_resp:sub(#quote_resp, #quote_resp) ~= " " then
-                            for j = i, 0, -1 do
-                                if quote_resp:sub(j, j) == " " then
-                                    quote_resp = quote_resp:sub(1, j - 1) .. "\n" .. quote_resp:sub(j + 1, #quote_resp)
-                                    if j > len then
-                                        len = j - 1
-                                    end
-                                    break
-                                end
-                            end
-                        else
-                            quote_resp = quote_resp .. "\n"
-                        end
-                    end
-
-                    quote_resp = quote_resp .. data[1].q:sub(i, i)
-                end
-                if len == 0 then
-                    len = #quote_resp
-                end
-
-                author_padding = string.rep(" ", len - #author)
-
-                local lines = vim.split(quote_resp, "\n")
-                for _, line in ipairs(lines) do
-                    table.insert(quote_grp.val, {
-                        type = "text",
-                        val = line .. string.rep(" ", len - #line),
-                        opts = { hl = "Quote", position = "center" },
-                    })
-                end
-
-                table.insert(quote_grp.val, {
-                    type = "text",
-                    val = author_padding .. author,
-                    opts = {
-                        hl = "Quote",
-                        position = "center",
-                    },
-                })
-            end)
-        else
-            quote_simple("The philosophers are not availble right now.")
-        end
-
-        vim.schedule(function()
-            alpha.redraw()
-        end)
-    end,
-    on_error = function(err)
-        quote_simple(require("alpha.fortune")())
-        vim.schedule(function()
-            print(err)
-            alpha.redraw()
-        end)
-    end,
-})
-
-function versions()
+local function versions()
     local version_str = vim.fn.api_info().version.major
         .. "."
         .. vim.fn.api_info().version.minor
@@ -149,7 +60,7 @@ function versions()
     }
 end
 
-function stats_table()
+local function stats_table()
     local table_width = math.floor(vim.o.columns / 2)
     local table_start = math.floor((vim.o.columns - table_width) / 2)
 
@@ -169,6 +80,32 @@ function stats_table()
             seperator("_"),
         },
     }
+end
+
+-- Center quote
+local fortune = require("fortune").get_fortune()
+local quote_grp = {
+    type = "group",
+    val = {},
+}
+
+if #fortune[1] == 1 then
+    table.remove(fortune, 1)
+end
+
+for _, line in ipairs(fortune) do
+    if #line == 1 then
+         break
+    end
+
+    table.insert(quote_grp.val, {
+        type = "text",
+        val = line,
+        opts = {
+            position = "center",
+            hl = "Comment"
+        },
+    })
 end
 
 local config = {
@@ -191,9 +128,9 @@ local config = {
         padding(1),
         versions(),
         padding(2),
-        quote_grp,
-        padding(3),
         stats_table(),
+        padding(2),
+        quote_grp,
     },
 }
 

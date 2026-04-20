@@ -31,17 +31,6 @@ local logo = {
     },
 }
 
-local function quote(quote_str)
-    return {
-        type = "text",
-        val = quote_str,
-        opts = {
-            position = "center",
-            hl = "Quote",
-        },
-    }
-end
-
 local function versions()
     local version_str = vim.fn.api_info().version.major
         .. "."
@@ -82,30 +71,37 @@ local function stats_table()
     }
 end
 
--- Center quote
-local fortune = require("fortune").get_fortune()
-local quote_grp = {
-    type = "group",
-    val = {},
-}
+local function quote()
+    local fortune = require("fortune").get_fortune()
+    local quote_grp = {
+        type = "group",
+        val = {},
+    }
 
-if #fortune[1] == 1 then
-    table.remove(fortune, 1)
-end
-
-for _, line in ipairs(fortune) do
-    if #line == 1 then
-         break
+    if #fortune[1] == 1 then
+        table.remove(fortune, 1)
     end
 
-    table.insert(quote_grp.val, {
-        type = "text",
-        val = line,
-        opts = {
-            position = "center",
-            hl = "Comment"
-        },
-    })
+    for _, line in ipairs(fortune) do
+        if #line == 1 then
+            break
+        end
+
+        table.insert(quote_grp.val, {
+            type = "text",
+            val = line,
+            opts = {
+                position = "center",
+                hl = "Comment",
+            },
+        })
+    end
+
+    quote_grp.val[1].val = '“' .. quote_grp.val[1].val:gsub("^%s", "")
+    local last_entry = #quote_grp.val
+    quote_grp.val[last_entry].val = quote_grp.val[last_entry].val:gsub("%s$", "") .. '”'
+
+    return quote_grp
 end
 
 local config = {
@@ -130,7 +126,7 @@ local config = {
         padding(2),
         stats_table(),
         padding(2),
-        quote_grp,
+        quote(),
     },
 }
 

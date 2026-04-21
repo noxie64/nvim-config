@@ -86,8 +86,8 @@ local function stats_table()
                     { "TableHeading", heading_padding(true), heading_padding(true) + #heading },
                     {
                         "Comment",
-                        heading_padding(false) + #heading + 1,
-                        heading_padding(false) + #heading + heading_padding_after,
+                        heading_padding(false) + #heading,
+                        heading_padding(false) + #heading + heading_padding(false) + #heading + heading_padding_after,
                     },
                 },
                 position = "center",
@@ -119,48 +119,85 @@ local function stats_table()
         }
     end
 
-    local function os_info()
-        local os_str = vim.fn.system("uname -r"):gsub("%s$", "")
-        local os_hl = ""
-        if vim.v.shell_error ~= 0 then
-            os_str = "n/a"
-            os_hl = "Comment"
+    local function command_out_safe(cmd)
+        local ok, result = pcall(function()
+            return vim.system(cmd, { text = true }):wait()
+        end)
+        if not ok then
+            return "n/a", "Comment"
         end
 
+        return result.stdout, ""
+    end
+
+    local function key(val)
+        return {
+            val = val,
+            hl = "Keyword",
+        }
+    end
+
+    local function os_info()
+        local os_str, os_hl = command_out_safe({"uname", "-r"})
+        os_str = os_str:gsub("%s+$", "")
         if os_str:find("arch") then
             os_str = "󰣇 " .. os_str
         end
 
+        local uptime, uptime_hl = command_out_safe({"sh", "-c", "uptime -r | cut -d' ' -f2"})
+        if tonumber(uptime) ~= nil then
+            local uptime_n = tonumber(uptime)
+            local h = math.floor(uptime_n / 3600)
+            local m = math.floor((uptime_n % 3600) / 60)
+            local s = uptime_n % 60
+            uptime = string.format("%02d:%02d:%02d", h, m, s)
+            uptime_hl = ""
+        end
+
         return {
-            space_between({
-                val = "Type",
-                hl = "Keyword",
-            }, {
+            space_between(key("Type"), {
                 val = os_str,
                 hl = os_hl,
+            }),
+            space_between(key("Uptime"), {
+                val = uptime,
+                hl = uptime_hl,
             }),
         }
     end
 
-    local function loaded_plugins()
-        return space_between({
-            val = "Loaded plugins",
-            hl = "Keyword",
-        }, {
+    local function lazy()
+        return space_between(key("Loaded plugins"), {
             val = #require("lazy").plugins(),
             hl = "",
         })
     end
 
+    -- flatten table
+    local function construct_table(parts)
+        local final = {}
+
+        for _, el in ipairs(parts) do
+            if type(el) == "table" and el.type == nil then
+                for _, inner_el in ipairs(el) do
+                    table.insert(final, inner_el)
+                end
+            else
+                table.insert(final, el)
+            end
+        end
+        return final
+    end
+
     return {
         type = "group",
-        val = {
+        val = construct_table({
             seperator_heading("-", "OS"),
-            unpack(os_info()),
-            seperator_heading("-", "󰒲 Lazy"),
-            loaded_plugins(),
+            os_info(),
+            seperator_heading("-", "Lazy 󰒲"),
+            lazy(),
             seperator("‾"),
-        },
+        }),
     }
 end
 

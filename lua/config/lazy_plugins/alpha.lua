@@ -53,8 +53,7 @@ local function versions()
 end
 
 local function stats_table()
-    local table_width = math.floor(vim.o.columns / 2)
-    local table_start = math.floor((vim.o.columns - table_width) / 2)
+    local table_width = math.min(math.floor(vim.o.columns / 2), 60)
 
     local function seperator(chr)
         return {

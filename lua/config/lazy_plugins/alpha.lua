@@ -8,9 +8,9 @@ local function padding(n)
 end
 
 -- Highlight-groups --
-vim.api.nvim_set_hl(0, "TableKey", {
+vim.api.nvim_set_hl(0, "TableHeading", {
     fg = vim.api.nvim_get_hl(0, { name = "Keyword", link = false }).fg,
-    bold = true
+    bold = true,
 })
 vim.api.nvim_set_hl(0, "Versions", {
     bg = vim.api.nvim_get_hl(0, { name = "Keyword", link = false }).fg,
@@ -54,6 +54,7 @@ end
 
 local function stats_table()
     local table_width = math.min(math.floor(vim.o.columns / 2), 60)
+    local len = vim.fn.strcharlen
 
     local function seperator(chr)
         return {
@@ -66,25 +67,55 @@ local function stats_table()
         }
     end
 
+    local function seperator_heading(chr, heading)
+        local function heading_padding(real)
+            if real then
+                return math.floor((table_width - len(heading)) / 2)
+            end
+
+            return math.floor((table_width - #heading) / 2)
+        end
+
+        local heading_padding_after = table_width - heading_padding(true) - len(heading)
+        return {
+            type = "text",
+            val = string.rep(chr, heading_padding(true)) .. heading .. string.rep(chr, heading_padding_after),
+            opts = {
+                hl = {
+                    { "Comment", 0, heading_padding(true) },
+                    { "TableHeading", heading_padding(true), heading_padding(true) + #heading },
+                    {
+                        "Comment",
+                        heading_padding(false) + #heading + 1,
+                        heading_padding(false) + #heading + heading_padding_after,
+                    },
+                },
+                position = "center",
+            },
+        }
+    end
+
     local function space_between(start_el, end_el)
         local line = start_el.val
-        local len = vim.fn.strcharlen
 
         local padding_between = table_width - len(start_el.val) - len(end_el.val)
         line = line .. string.rep(" ", padding_between)
         line = line .. end_el.val
-
 
         return {
             type = "text",
             val = line,
             opts = {
                 hl = {
-                    {start_el.hl, 0, len(start_el.val)},
-                    {end_el.hl, len(start_el.val) + padding_between, len(start_el.val) + padding_between + len(end_el.val)}
+                    { start_el.hl, 0, len(start_el.val) },
+                    {
+                        end_el.hl,
+                        len(start_el.val) + padding_between,
+                        len(start_el.val) + padding_between + len(end_el.val),
+                    },
                 },
-                position = "center"
-            }
+                position = "center",
+            },
         }
     end
 
@@ -100,37 +131,33 @@ local function stats_table()
             os_str = "󰣇 " .. os_str
         end
 
-
-        return space_between(
-            {
-                val = "OS",
-                hl = "TableKey"
-            },
-            {
+        return {
+            space_between({
+                val = "Type",
+                hl = "Keyword",
+            }, {
                 val = os_str,
-                hl = os_hl
-            }
-        )
+                hl = os_hl,
+            }),
+        }
     end
 
     local function loaded_plugins()
-        return space_between(
-            {
-                val = "Lazy Plugins",
-                hl = "TableKey"
-            },
-            {
-                val = "󰒲 " .. #require("lazy").plugins(),
-                hl = ""
-            }
-        )
+        return space_between({
+            val = "Loaded plugins",
+            hl = "Keyword",
+        }, {
+            val = #require("lazy").plugins(),
+            hl = "",
+        })
     end
 
     return {
         type = "group",
         val = {
-            seperator("_"),
-            os_info(),
+            seperator_heading("-", "OS"),
+            unpack(os_info()),
+            seperator_heading("-", "󰒲 Lazy"),
             loaded_plugins(),
             seperator("‾"),
         },
@@ -163,9 +190,9 @@ local function quote()
         })
     end
 
-    quote_grp.val[1].val = '“' .. quote_grp.val[1].val:gsub("^%s", "")
+    quote_grp.val[1].val = "“" .. quote_grp.val[1].val:gsub("^%s", "")
     local last_entry = #quote_grp.val
-    quote_grp.val[last_entry].val = quote_grp.val[last_entry].val:gsub("%s$", "") .. '”'
+    quote_grp.val[last_entry].val = quote_grp.val[last_entry].val:gsub("%s$", "") .. "”"
 
     return quote_grp
 end

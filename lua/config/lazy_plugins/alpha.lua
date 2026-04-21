@@ -18,6 +18,25 @@ vim.api.nvim_set_hl(0, "Versions", {
     bold = true,
 })
 
+vim.api.nvim_set_hl(0, "Good", {
+    fg = vim.api.nvim_get_hl(0, { name = "OkMsg", link = false }).fg,
+})
+vim.api.nvim_set_hl(0, "Warn", {
+    fg = vim.api.nvim_get_hl(0, { name = "WarningMsg", link = false }).fg,
+})
+vim.api.nvim_set_hl(0, "Bad", {
+    fg = vim.api.nvim_get_hl(0, { name = "ErrorMsg", link = false }).fg,
+})
+vim.api.nvim_set_hl(0, "SecondHighlight", {
+    fg = vim.api.nvim_get_hl(0, { name = "MoreMsg", link = false }).fg,
+    bold = true,
+})
+
+vim.api.nvim_set_hl(0, "Default", {
+    fg = vim.api.nvim_get_hl(0, { name = "StdoutMsg", link = false }).fg,
+    italic = true,
+})
+
 local logo = {
     type = "text",
     val = {
@@ -96,6 +115,9 @@ local function stats_table()
     end
 
     local function space_between(start_el, end_el)
+        start_el.val = tostring(start_el.val)
+        end_el.val = tostring(end_el.val)
+
         local line = start_el.val
 
         local padding_between = table_width - len(start_el.val) - len(end_el.val)
@@ -107,11 +129,11 @@ local function stats_table()
             val = line,
             opts = {
                 hl = {
-                    { start_el.hl, 0, len(start_el.val) },
+                    { start_el.hl, 0, #start_el.val },
                     {
                         end_el.hl,
-                        len(start_el.val) + padding_between,
-                        len(start_el.val) + padding_between + len(end_el.val),
+                        #start_el.val + padding_between,
+                        #start_el.val + padding_between + #end_el.val,
                     },
                 },
                 position = "center",
@@ -119,15 +141,23 @@ local function stats_table()
         }
     end
 
-    local function command_out_safe(cmd)
+    local function command_out_safe(...)
+        local cmd, hl = ...
         local ok, result = pcall(function()
             return vim.system(cmd, { text = true }):wait()
         end)
+        local output = ""
         if not ok then
-            return "n/a", "Comment"
+            output = "n/a"
+            hl = "Comment"
+        else
+            output = result.stdout
+            if hl == nil then
+                hl = ""
+            end
         end
 
-        return result.stdout, ""
+        return output, hl, ok
     end
 
     local function key(val)
@@ -137,21 +167,70 @@ local function stats_table()
         }
     end
 
+    local function format_time(seconds)
+        local h = math.floor(seconds / 3600)
+        local m = math.floor((seconds % 3600) / 60)
+        local s = seconds % 60
+        return string.format("%02d:%02d:%02d", h, m, s)
+    end
+
     local function os_info()
-        local os_str, os_hl = command_out_safe({"uname", "-r"})
+        local os_str, os_hl = command_out_safe({ "uname", "-r" }, "SecondHighlight")
         os_str = os_str:gsub("%s+$", "")
         if os_str:find("arch") then
             os_str = "󰣇 " .. os_str
         end
 
-        local uptime, uptime_hl = command_out_safe({"sh", "-c", "uptime -r | cut -d' ' -f2"})
-        if tonumber(uptime) ~= nil then
-            local uptime_n = tonumber(uptime)
-            local h = math.floor(uptime_n / 3600)
-            local m = math.floor((uptime_n % 3600) / 60)
-            local s = uptime_n % 60
-            uptime = string.format("%02d:%02d:%02d", h, m, s)
-            uptime_hl = ""
+        local uptime, uptime_hl = command_out_safe({ "sh", "-c", "uptime -r | cut -d' ' -f2" }, "Default")
+        local uptime_n = tonumber(uptime)
+        if uptime_n ~= nil then
+            uptime = format_time(uptime_n)
+        end
+
+        local function hl_by_num(num)
+            if num < 50 then
+                return "Good"
+            elseif num > 50 and num < 75 then
+                return "Warn"
+            end
+            return "Bad"
+        end
+
+        local cpu_usage_str, cpu_usage_hl, cpu_usage_ok =
+            command_out_safe({ "sh", "-c", "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$3+$4+$5)} END {print usage}'" })
+        local cpu_usage = tonumber(cpu_usage_str)
+        if cpu_usage_ok then
+            cpu_usage_hl = hl_by_num(cpu_usage)
+            cpu_usage_str = string.format("%.2f", cpu_usage)
+        end
+
+        local cpu_temp_str, cpu_temp_hl =
+            command_out_safe({ "cat", "/sys/class/thermal/thermal_zone0/temp" }, "Default")
+        local cpu_temp = tonumber(cpu_temp_str) / 1000
+        if cpu_temp < 50 then
+            cpu_temp_hl = "Good"
+        elseif cpu_temp > 50 and cpu_temp < 75 then
+            cpu_temp_hl = "Warn"
+        else
+            cpu_temp_hl = "Bad"
+        end
+
+        local mem_used_str, mem_used_hl, used_ok =
+            command_out_safe({ "sh", "-c", "free | awk '/Mem/ {printf \"%.2f\", $3 / 1000000}'" })
+        local mem_total_str, mem_total_hl, total_ok =
+            command_out_safe({ "sh", "-c", "free | awk '/Mem/ {printf \"%.2f\", $2 / 1000000}'" })
+        local mem_perc
+        local mem_perc_str = "n/a"
+        local mem_hl = "Comment"
+
+        if used_ok and total_ok then
+            local mem_total = tonumber(mem_total_str)
+            mem_perc = tonumber(mem_used_str) / mem_total
+            mem_perc_str = string.format("%.2f", mem_perc)
+            mem_total_str = tostring(math.floor(mem_total)) .. "G"
+            mem_used_str = mem_used_str .. "G"
+
+            mem_hl = hl_by_num(mem_perc)
         end
 
         return {
@@ -163,13 +242,25 @@ local function stats_table()
                 val = uptime,
                 hl = uptime_hl,
             }),
+            space_between(key("CPU-Usage"), {
+                val = cpu_usage_str .. "  %",
+                hl = cpu_usage_hl,
+            }),
+            space_between(key("CPU-Temp"), {
+                val = cpu_temp .. " °C",
+                hl = cpu_temp_hl,
+            }),
+            space_between(key("Memory"), {
+                val = mem_used_str .. " / " .. mem_total_str .. " -> " .. mem_perc_str .. "  %",
+                hl = mem_hl,
+            }),
         }
     end
 
     local function lazy()
         return space_between(key("Loaded plugins"), {
             val = #require("lazy").plugins(),
-            hl = "",
+            hl = "Default",
         })
     end
 

@@ -196,8 +196,11 @@ local function stats_table()
             return "Bad"
         end
 
-        local cpu_usage_str, cpu_usage_hl, cpu_usage_ok =
-            command_out_safe({ "sh", "-c", "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$3+$4+$5)} END {print usage}'" })
+        local cpu_usage_str, cpu_usage_hl, cpu_usage_ok = command_out_safe({
+            "sh",
+            "-c",
+            "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$3+$4+$5)} END {print usage}'",
+        })
         local cpu_usage = tonumber(cpu_usage_str)
         if cpu_usage_ok then
             cpu_usage_hl = hl_by_num(cpu_usage)
@@ -225,7 +228,7 @@ local function stats_table()
 
         if used_ok and total_ok then
             local mem_total = tonumber(mem_total_str)
-            mem_perc = tonumber(mem_used_str) / mem_total
+            mem_perc = tonumber(mem_used_str) / mem_total * 100
             mem_perc_str = string.format("%.2f", mem_perc)
             mem_total_str = tostring(math.floor(mem_total)) .. "G"
             mem_used_str = mem_used_str .. "G"
@@ -324,34 +327,51 @@ local function quote()
 
     return quote_grp
 end
-
-local config = {
-    keymap = {
-        {
-            "n",
-            "i",
-            function()
-                local buf = vim.api.nvim_get_current_buf()
-                vim.cmd("enew")
-                vim.cmd("startinsert")
-                pcall(vim.api.nvim_buf_delete, buf, { force = true })
-            end,
-            { noremap = true, silent = true },
+local timer_id = -1
+local quote_saved = quote()
+local line_numbers = vim.opt.number
+local function config()
+    vim.opt.number = false
+    return {
+        layout = {
+            padding(4),
+            logo,
+            padding(1),
+            versions(),
+            padding(2),
+            stats_table(),
+            padding(2),
+            quote_saved,
         },
-    },
-    layout = {
-        padding(4),
-        logo,
-        padding(1),
-        versions(),
-        padding(2),
-        stats_table(),
-        padding(2),
-        quote(),
-    },
-}
+    }
+end
 
-alpha.setup(config)
+function close()
+    local buf = vim.api.nvim_get_current_buf()
+    if timer_id ~= -1 then
+        vim.fn.timer_stop(timer_id)
+    end
+    vim.api.nvim_buf_set_option(buf, "modifiable", true) -- unlock it
+    vim.opt.number = line_numbers
+    vim.cmd("enew")
+    vim.cmd("startinsert")
+    pcall(vim.api.nvim_buf_delete, buf, { force = true })
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "alpha",
+    callback = function()
+        vim.keymap.set("n", "i", close, { buffer = true, noremap = true, silent = true })
+        vim.keymap.set("n", "<CR>", function ()end, { buffer = true, noremap = true, silent = true })
+    end,
+})
+
+timer_id = vim.fn.timer_start(1000, function()
+    alpha.setup(config())
+    alpha.redraw()
+end, { ["repeat"] = -1 })
+
+alpha.setup(config())
 
 -- Draw startup-image
 -- vim.api.nvim_create_autocmd("User", {
@@ -366,7 +386,7 @@ alpha.setup(config)
 --                 x = 10, -- column offset
 --                 y = 2, -- row offset
 --                 width = 40,
---                 height = 20,
+--                 height = 19,
 --             })
 --             :render()
 --     end,

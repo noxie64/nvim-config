@@ -9,7 +9,10 @@ local lazy = {
         dependencies = { "nvim-tree/nvim-web-devicons" },
     },
     "nvim-tree/nvim-tree.lua",
-    "nvim-treesitter/nvim-treesitter",
+    {
+        "nvim-treesitter/nvim-treesitter",
+        commit = "cf12346a3414fa1b06af75c79faebe7f76df080a"
+    },
     "savq/melange-nvim",
     {
         "ThePrimeagen/harpoon",
@@ -131,7 +134,7 @@ local lazy = {
             backend = "kitty", -- change to "ueberzug" if not using Kitty
         },
     },
-    "rubiin/fortune.nvim"
+    "rubiin/fortune.nvim",
 }
 
 return lazy

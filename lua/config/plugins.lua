@@ -11,7 +11,8 @@ local lazy = {
     "nvim-tree/nvim-tree.lua",
     {
         "nvim-treesitter/nvim-treesitter",
-        commit = "cf12346a3414fa1b06af75c79faebe7f76df080a"
+        build = ":TSUpdate",
+        lazy = false
     },
     "savq/melange-nvim",
     {

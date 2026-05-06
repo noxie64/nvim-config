@@ -331,7 +331,7 @@ local timer_id = -1
 local quote_saved = quote()
 local line_numbers = vim.opt.number
 local function config()
-    vim.opt.number = false
+    -- vim.opt.number = false // needs to be fixed
     return {
         layout = {
             padding(4),

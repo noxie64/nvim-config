@@ -82,3 +82,22 @@ end)
 
 -- examine lsp errors
 map("n", "<A-p>", vim.diagnostic.open_float)
+
+-- debugging
+local dap = require("dap")
+map("n", "<F5>",  dap.continue)
+map("n", "<F10>", dap.step_over)
+map("n", "<F11>", dap.step_into)
+map("n", "<F12>", dap.step_out)
+
+local pb = require("persistent-breakpoints.api")
+
+map("n", "<leader>b",  pb.toggle_breakpoint)
+map("n", "<leader>B",  pb.set_conditional_breakpoint)
+map("n", "<leader>bc", pb.clear_all_breakpoints)
+
+map("n", "<leader>dr", dap.repl.open)
+map("n", "<leader>du", require("dapui").toggle)
+map("n", "<leader>de", function()
+  require("dapui").eval()
+end)

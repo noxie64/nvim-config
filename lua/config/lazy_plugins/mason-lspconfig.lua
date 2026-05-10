@@ -12,7 +12,7 @@ local lsp_server = {
     "bashls",
     "rust_analyzer",
     "texlab",
-    "intelephense"
+    "intelephense",
 }
 
 local lspconfig = require("lspconfig")

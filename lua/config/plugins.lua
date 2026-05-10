@@ -12,7 +12,7 @@ local lazy = {
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        lazy = false
+        lazy = false,
     },
     "savq/melange-nvim",
     {
@@ -112,9 +112,6 @@ local lazy = {
             "MunifTanjim/nui.nvim",
         },
         build = function()
-            -- Install tries to automatically detect the install method.
-            -- if it fails, try calling it with one of these parameters:
-            --    "curl", "wget", "bitsadmin", "go"
             require("dbee").install()
         end,
     },
@@ -122,7 +119,7 @@ local lazy = {
     "goolord/alpha-nvim",
     {
         "vhyrro/luarocks.nvim",
-        priority = 1000, -- Very high priority is required, luarocks.nvim should run as the first plugin in your config.
+        priority = 1000,
         config = true,
         build = ":RocksInstall dkjson",
         opts = {
@@ -132,10 +129,21 @@ local lazy = {
     {
         "3rd/image.nvim",
         opts = {
-            backend = "kitty", -- change to "ueberzug" if not using Kitty
+            backend = "kitty",
         },
     },
     "rubiin/fortune.nvim",
+
+    {
+        "mfussenegger/nvim-dap",
+        dependencies = {
+            "rcarriga/nvim-dap-ui",
+            "theHamsta/nvim-dap-virtual-text",
+            "nvim-neotest/nvim-nio",
+            "williamboman/mason.nvim",
+        },
+    },
+    "Weissle/persistent-breakpoints.nvim",
 }
 
 return lazy

@@ -101,3 +101,13 @@ map("n", "<leader>du", require("dapui").toggle)
 map("n", "<leader>de", function()
   require("dapui").eval()
 end)
+
+-- luasnip
+local ls = require("luasnip")
+vim.keymap.set({"i", "s"}, "<Tab>", function()
+    if ls.jumpable(1) then ls.jump(1) end
+end, { silent = true })
+
+vim.keymap.set({"i", "s"}, "<S-Tab>", function()
+    if ls.jumpable(-1) then ls.jump(-1) end
+end, { silent = true })

@@ -144,6 +144,7 @@ local lazy = {
         },
     },
     "Weissle/persistent-breakpoints.nvim",
+    "mfussenegger/nvim-dap-python"
 }
 
 return lazy

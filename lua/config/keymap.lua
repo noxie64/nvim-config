@@ -53,10 +53,10 @@ map("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
 map("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
 map("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
 vim.keymap.set("n", "<leader>fb", function()
-  require("telescope").extensions.file_browser.file_browser({
-    path = "%:p:h",
-    select_buffer = true,
-  })
+    require("telescope").extensions.file_browser.file_browser({
+        path = "%:p:h",
+        select_buffer = true,
+    })
 end)
 
 -- Todos
@@ -85,29 +85,37 @@ map("n", "<A-p>", vim.diagnostic.open_float)
 
 -- debugging
 local dap = require("dap")
-map("n", "<F5>",  dap.continue)
+map("n", "<F5>", dap.continue)
 map("n", "<F10>", dap.step_over)
 map("n", "<F11>", dap.step_into)
 map("n", "<F12>", dap.step_out)
 
 local pb = require("persistent-breakpoints.api")
 
-map("n", "<leader>b",  pb.toggle_breakpoint)
-map("n", "<leader>B",  pb.set_conditional_breakpoint)
+map("n", "<leader>b", pb.toggle_breakpoint)
+map("n", "<leader>B", pb.set_conditional_breakpoint)
 map("n", "<leader>bc", pb.clear_all_breakpoints)
 
 map("n", "<leader>dr", dap.repl.open)
 map("n", "<leader>du", require("dapui").toggle)
 map("n", "<leader>de", function()
-  require("dapui").eval()
+    require("dapui").eval()
 end)
 
 -- luasnip
 local ls = require("luasnip")
-vim.keymap.set({"i", "s"}, "<Tab>", function()
-    if ls.jumpable(1) then ls.jump(1) end
+vim.keymap.set({ "i", "s" }, "<Tab>", function()
+    if ls.jumpable(1) then
+        ls.jump(1)
+    else
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Tab>", true, false, true), "n", false)
+    end
 end, { silent = true })
 
-vim.keymap.set({"i", "s"}, "<S-Tab>", function()
-    if ls.jumpable(-1) then ls.jump(-1) end
+vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
+    if ls.jumpable(-1) then
+        ls.jump(-1)
+    else
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<S-Tab>", true, false, true), "n", false)
+    end
 end, { silent = true })

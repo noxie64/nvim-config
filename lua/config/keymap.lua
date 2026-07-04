@@ -104,7 +104,7 @@ end)
 
 -- luasnip
 local ls = require("luasnip")
-vim.keymap.set({ "i", "s" }, "<Tab>", function()
+vim.keymap.set({ "i", "s" }, "<A-n>", function()
     if ls.jumpable(1) then
         ls.jump(1)
     else
@@ -112,7 +112,7 @@ vim.keymap.set({ "i", "s" }, "<Tab>", function()
     end
 end, { silent = true })
 
-vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
+vim.keymap.set({ "i", "s" }, "<A-p>", function()
     if ls.jumpable(-1) then
         ls.jump(-1)
     else

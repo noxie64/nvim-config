@@ -106,26 +106,8 @@ local lazy = {
     "yorumicolors/yorumi.nvim",
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     "mistweaverco/retro-theme.nvim",
-    {
-        "kndndrj/nvim-dbee",
-        dependencies = {
-            "MunifTanjim/nui.nvim",
-        },
-        build = function()
-            require("dbee").install()
-        end,
-    },
     "tomasr/molokai",
     "goolord/alpha-nvim",
-    {
-        "vhyrro/luarocks.nvim",
-        priority = 1000,
-        config = true,
-        build = ":RocksInstall dkjson",
-        opts = {
-            rocks = require("config.rocks"),
-        },
-    },
     {
         "3rd/image.nvim",
         opts = {
@@ -144,7 +126,7 @@ local lazy = {
         },
     },
     "Weissle/persistent-breakpoints.nvim",
-    "mfussenegger/nvim-dap-python"
+    "mfussenegger/nvim-dap-python",
 }
 
 return lazy

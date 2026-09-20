@@ -56,6 +56,20 @@ local handlers = {
             },
         })
     end,
+    ["ts_ls"] = function()
+        require("lspconfig").ts_ls.setup({
+            init_options = {
+                maxTsServerMemory = 4096,
+            },
+            settings = {
+                typescript = {
+                    tsserver = {
+                        maxTsServerMemory = 4096,
+                    },
+                },
+            },
+        })
+    end,
 }
 
 require("mason-lspconfig").setup({

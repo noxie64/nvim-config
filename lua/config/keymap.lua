@@ -2,6 +2,7 @@ local map = vim.keymap.set
 local opts = { silent = true, noremap = true }
 
 local harpoon = require("harpoon")
+local custom = require("custom_keymap")
 
 -- some stylistic goodies
 function initTabbar()
@@ -119,3 +120,12 @@ vim.keymap.set({ "i", "s" }, "<A-p>", function()
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<S-Tab>", true, false, true), "n", false)
     end
 end, { silent = true })
+
+-- custom
+map('x', 'W', function ()
+    wrap(" ")
+end)
+
+map('x', 'w', function ()
+    wrap("")
+end)

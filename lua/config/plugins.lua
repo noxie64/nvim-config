@@ -1,6 +1,7 @@
-local lazy = {
-
-    -- color-themes
+local plugin_spec = {
+    ----------------------
+    --   color-themes   --
+    ----------------------
     "rebelot/kanagawa.nvim",
     "folke/tokyonight.nvim",
     "EdenEast/nightfox.nvim",
@@ -8,74 +9,11 @@ local lazy = {
         "nvim-lualine/lualine.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
     },
-    "nvim-tree/nvim-tree.lua",
-    {
-        "nvim-treesitter/nvim-treesitter",
-        build = ":TSUpdate",
-        lazy = false,
-    },
     "savq/melange-nvim",
-    {
-        "ThePrimeagen/harpoon",
-        branch = "harpoon2",
-    },
-    "nvim-lua/plenary.nvim",
-    {
-        "nvim-telescope/telescope.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
-    },
-    {
-        "nvim-telescope/telescope-file-browser.nvim",
-        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
-    },
-    {
-        "MaximilianLloyd/ascii.nvim",
-        dependencies = { "MunifTanjim/nui.nvim" },
-    },
-
-    -- LSP
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    "nvimtools/none-ls.nvim",
-    "neovim/nvim-lspconfig",
-    "jay-babu/mason-null-ls.nvim",
-
-    -- Auto-complete
-    "neovim/nvim-lspconfig",
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/cmp-buffer",
-    "hrsh7th/cmp-path",
-    "hrsh7th/cmp-cmdline",
-    "hrsh7th/nvim-cmp",
-
-    -- Snippets
-    {
-        "L3MON4D3/LuaSnip",
-        build = "make install_jsregexp",
-        dependencies = {
-            "rafamadriz/friendly-snippets",
-            "saadparwaiz1/cmp_luasnip",
-        },
-    },
-
-    -- Autopairing
-    {
-        "windwp/nvim-autopairs",
-        event = "InsertEnter",
-        config = true,
-    },
-    "windwp/nvim-ts-autotag",
-
-    -- Other
-    {
-        "iamcco/markdown-preview.nvim",
-        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-        ft = { "markdown" },
-        build = function()
-            vim.fn["mkdp#util#install"]()
-        end,
-    },
+    "yorumicolors/yorumi.nvim",
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+    "mistweaverco/retro-theme.nvim",
+    "tomasr/molokai",
     "ellisonleao/gruvbox.nvim",
     {
         "navarasu/onedark.nvim",
@@ -87,7 +25,81 @@ local lazy = {
             require("onedark").load()
         end,
     },
+
+    -------------------------
+    ---   functionality   ---
+    -------------------------
+    "nvim-tree/nvim-tree.lua",
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        lazy = false,
+    },
+    {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+    },
+    "nvim-lua/plenary.nvim",
+    -- fuzzy-search
+    {
+        "nvim-telescope/telescope.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+    },
+    -- file-browser for telescope
+    {
+        "nvim-telescope/telescope-file-browser.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+    },
+
+    --    LSP   --
+    "williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    "nvimtools/none-ls.nvim",
+    "neovim/nvim-lspconfig",
+    "jay-babu/mason-null-ls.nvim",
+
+    --    Auto-complete   --
+    "neovim/nvim-lspconfig",
+    "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/cmp-buffer",
+    "hrsh7th/cmp-path",
+    "hrsh7th/cmp-cmdline",
+    "hrsh7th/nvim-cmp",
+
+    --   Snippets   --
+    {
+        "L3MON4D3/LuaSnip",
+        build = "make install_jsregexp",
+        dependencies = {
+            "rafamadriz/friendly-snippets",
+            "saadparwaiz1/cmp_luasnip",
+        },
+    },
+
+    --   Autopairing   --
+    {
+        "windwp/nvim-autopairs",
+        event = "InsertEnter",
+        config = true,
+    },
+    "windwp/nvim-ts-autotag",
+
+    ---------------
+    --   Other   --
+    ---------------
+
+    {
+        "iamcco/markdown-preview.nvim",
+        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        ft = { "markdown" },
+        build = function()
+            vim.fn["mkdp#util#install"]()
+        end,
+    },
+    -- show todos
     "folke/todo-comments.nvim",
+    -- latex-support
     {
         "lervag/vimtex",
         lazy = false,
@@ -103,19 +115,19 @@ local lazy = {
             }
         end,
     },
-    "yorumicolors/yorumi.nvim",
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-    "mistweaverco/retro-theme.nvim",
-    "tomasr/molokai",
+    -- startup-screen
     "goolord/alpha-nvim",
+    -- image-viewer for nvim
     {
         "3rd/image.nvim",
         opts = {
             backend = "kitty",
         },
     },
+    -- fortunes for startup-screen
     "rubiin/fortune.nvim",
-
+    -- remove trailing whitespaces
+    { "jdhao/whitespace.nvim", event = "VeryLazy" },
     {
         "mfussenegger/nvim-dap",
         dependencies = {
@@ -129,4 +141,4 @@ local lazy = {
     "mfussenegger/nvim-dap-python",
 }
 
-return lazy
+return plugin_spec

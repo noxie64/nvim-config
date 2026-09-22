@@ -40,15 +40,31 @@ local plugin_spec = {
         branch = "harpoon2",
     },
     "nvim-lua/plenary.nvim",
-    -- fuzzy-search
+    --   fuzzy-search   ---
     {
         "nvim-telescope/telescope.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
     },
-    -- file-browser for telescope
+    ---   file-browser for telescope   ---
     {
         "nvim-telescope/telescope-file-browser.nvim",
         dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+    },
+    ---   folding   ---
+    {
+        "kevinhwang91/nvim-ufo",
+        dependencies = "kevinhwang91/promise-async",
+        event = "VeryLazy",
+        opts = {},
+        init = function()
+            vim.o.foldcolumn = "1" -- '0' is not bad
+            vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+            vim.o.foldlevelstart = 99
+            vim.o.foldenable = true
+        end,
+        config = function()
+            require("config.lazy_plugins.nvim_ufo")
+        end,
     },
 
     --    LSP   --

@@ -2,7 +2,7 @@ local map = vim.keymap.set
 local opts = { silent = true, noremap = true }
 
 local harpoon = require("harpoon")
-local custom = require("custom_keymap")
+local custom = require("config.custom_keymap")
 
 -- some stylistic goodies
 function initTabbar()

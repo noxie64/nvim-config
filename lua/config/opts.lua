@@ -1,7 +1,10 @@
 NVIM_THEME = require('config.utils').NVIM_THEME
 
+local opt = vim.o.t
+local o = vim.o
+
 -- disable mouse
-vim.opt.mouse = ""
+opt.mouse = ""
 
 -- colorscheme
 vim.o.background = "dark"
@@ -21,11 +24,11 @@ if not isOK then
 end
 
 -- tabs
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
-vim.opt.softtabstop = 4
-vim.opt.list = true
+opt.tabstop = 4
+opt.shiftwidth = 4
+opt.expandtab = true
+opt.softtabstop = 4
+opt.list = true
 
 vim.api.nvim_create_autocmd("BufEnter", {
     pattern = "*",
@@ -37,10 +40,10 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 -- enable line numbers
-vim.opt.number = true
+opt.number = true
 
 -- clipboard
-vim.opt.clipboard = "unnamedplus"
+opt.clipboard = "unnamedplus"
 
 -- disable line wrap
 vim.o.wrap = true
@@ -49,4 +52,4 @@ vim.o.breakindent = true
 vim.o.showbreak = "↳ "
 
 -- set spell lang hallo
-vim.opt.spelllang = { "de", "en" }
+opt.spelllang = { "de", "en" }

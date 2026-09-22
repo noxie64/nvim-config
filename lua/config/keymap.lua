@@ -121,7 +121,17 @@ vim.keymap.set({ "i", "s" }, "<A-p>", function()
 end, { silent = true })
 
 -- leftover whitespaces
-map('n', "<leader>ws", ":StripTrailingWhitespace<CR>", opts)
+map("n", "<leader>ws", ":StripTrailingWhitespace<CR>", opts)
+
+-- folding
+vim.keymap.set("n", "zR", require("ufo").openAllFolds)
+vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+vim.keymap.set("n", "zr", require("ufo").openFoldsExceptKinds)
+vim.keymap.set("n", "<leader>K", function()
+    local _ = require("ufo").peekFoldedLinesUnderCursor()
+end, {
+    desc = "Preview folded maps",
+})
 
 -- custom
 -- map('x', 'W', function ()

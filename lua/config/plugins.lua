@@ -107,6 +107,9 @@ local plugin_spec = {
     },
     "windwp/nvim-ts-autotag",
 
+    --   chr-wrapping   --
+    "machakann/vim-sandwich",
+
     --   markdown-rendering   --
     {
         'MeanderingProgrammer/render-markdown.nvim',

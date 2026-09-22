@@ -124,10 +124,10 @@ end, { silent = true })
 map('n', "<leader>ws", ":StripTrailingWhitespace<CR>", opts)
 
 -- custom
-map('x', 'W', function ()
-    wrap(" ")
-end)
-
-map('x', 'w', function ()
-    wrap("")
-end)
+-- map('x', 'W', function ()
+--     wrap(" ")
+-- end)
+--
+-- map('x', 'w', function ()
+--     wrap("")
+-- end)

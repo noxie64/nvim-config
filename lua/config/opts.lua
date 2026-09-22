@@ -1,7 +1,23 @@
 NVIM_THEME = require('config.utils').NVIM_THEME
 
-local opt = vim.o.t
+local opt = vim.opt
 local o = vim.o
+
+opt.fillchars = {
+  fold = " ",
+  foldsep = " ",
+  foldopen = "",
+  foldclose = "",
+  vert = "│",
+  eob = " ",
+  msgsep = "‾",
+  diff = "╱",
+}
+
+-- Time in milliseconds to wait for a mapped sequence to complete,
+-- see https://unix.stackexchange.com/q/36882/221410 for more info
+opt.timeoutlen = 500
+opt.updatetime = 500 -- For CursorHold events
 
 -- disable mouse
 opt.mouse = ""

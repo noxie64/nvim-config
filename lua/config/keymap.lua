@@ -1,6 +1,5 @@
 local map = vim.keymap.set
 local opts = { silent = true, noremap = true }
-
 local harpoon = require("harpoon")
 local custom = require("config.custom_keymap")
 
@@ -120,6 +119,9 @@ vim.keymap.set({ "i", "s" }, "<A-p>", function()
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<S-Tab>", true, false, true), "n", false)
     end
 end, { silent = true })
+
+-- leftover whitespaces
+map('n', "<leader>ws", ":StripTrailingWhitespace<CR>", opts)
 
 -- custom
 map('x', 'W', function ()

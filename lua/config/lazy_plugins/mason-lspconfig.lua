@@ -1,7 +1,54 @@
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-local lsp_server = {
+-- applies to every server
+vim.lsp.config("*", { capabilities = capabilities })
+
+vim.lsp.config("html", {
+    settings = {
+        html = {
+            format = {
+                enable = true,
+                wrapLineLength = 80,
+                wrapAttributes = "auto",
+                indentInnerHtml = true,
+                preserveNewLines = true,
+            },
+            hover = { documentation = true, references = true },
+        },
+    },
+})
+
+vim.lsp.config("bashls", {
+    filetypes = { "sh", "bash", "zsh" },
+    settings = {
+        bashIde = {
+            shellcheckPath = "shellcheck",
+            shellcheckArguments = { "-x" },
+            shfmtPath = "shfmt",
+            shfmtExtraArgs = { "-i", "2", "-ci" },
+        },
+    },
+})
+
+vim.lsp.config("ts_ls", {
+    init_options = {
+        maxTsServerMemory = 4096,
+        tsserver = {
+            logDirectory = "/tmp/tsserver",
+            logVerbosity = "verbose",
+        },
+    },
+    settings = {
+        typescript = {
+            tsserver = {
+                maxTsServerMemory = 4096,
+            },
+        },
+    },
+})
+
+local lsps = {
     "lua_ls",
     "clangd",
     "html",
@@ -15,64 +62,11 @@ local lsp_server = {
     "intelephense",
 }
 
-local lspconfig = require("lspconfig")
-
-local handlers = {
-    function(name)
-        lspconfig[name].setup({ capabilities = capabilities })
-    end,
-    ["html"] = function()
-        lspconfig.html.setup({
-            capabilities = capabilities,
-            settings = {
-                html = {
-                    format = {
-                        enable = true, -- Enables formatting support
-                        wrapLineLength = 80, -- Wrap lines at 80 characters
-                        wrapAttributes = "auto", -- Wrap attributes automatically
-                        indentInnerHtml = true, -- Indent contents of <head> and <body>
-                        preserveNewLines = true, -- Preserve existing line breaks
-                    },
-                    hover = {
-                        documentation = true, -- Enable hover documentation
-                        references = true, -- Enable hover references
-                    },
-                },
-            },
-        })
-    end,
-    ["bashls"] = function()
-        lspconfig.bashls.setup({
-            capabilities = capabilities,
-            filetypes = { "sh", "bash", "zsh" },
-            cmd = { "bash-language-server", "start" },
-            settings = {
-                bashIde = {
-                    shellcheckPath = "shellcheck", -- diagnostic tool
-                    shellcheckArguments = { "-x" }, -- follow sourced files
-                    shfmtPath = "shfmt", -- formatter tool
-                    shfmtExtraArgs = { "-i", "2", "-ci" }, -- 2-space indent, indent case branches
-                },
-            },
-        })
-    end,
-    ["ts_ls"] = function()
-        require("lspconfig").ts_ls.setup({
-            init_options = {
-                maxTsServerMemory = 4096,
-            },
-            settings = {
-                typescript = {
-                    tsserver = {
-                        maxTsServerMemory = 4096,
-                    },
-                },
-            },
-        })
-    end,
-}
+for _, v in ipairs(lsps) do
+    vim.lsp.enable(v)
+end
 
 require("mason-lspconfig").setup({
-    ensure_installed = lsp_server,
-    handlers = handlers,
+    ensure_installed = lsps,
+    -- automatic_enable = true is the default: installed servers get vim.lsp.enable()'d
 })

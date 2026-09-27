@@ -48,6 +48,66 @@ vim.lsp.config("ts_ls", {
     },
 })
 
+vim.lsp.config("harper_ls", {
+    cmd = { "harper-ls", "--stdio" },
+    settings = {
+        ["harper-ls"] = {
+            userDictPath = "",
+            workspaceDictPath = "",
+            fileDictPath = "",
+            linters = {
+                SpellCheck = true,
+                SpelledNumbers = false,
+                AnA = true,
+                SentenceCapitalization = true,
+                UnclosedQuotes = true,
+                WrongApostrophe = false,
+                LongSentences = true,
+                RepeatedWords = true,
+                Spaces = true,
+                CorrectNumberSuffix = true,
+            },
+            codeActions = {
+                ForceStable = false,
+            },
+            markdown = {
+                IgnoreLinkTitle = false,
+            },
+            diagnosticSeverity = "hint",
+            isolateEnglish = false,
+            dialect = "American",
+            maxFileLength = 120000,
+            ignoredLintsPath = "",
+            excludePatterns = {},
+        },
+    },
+})
+
+local excluded_filetypes = {
+    ["neo-tree"] = true,
+    NvimTree = true,
+    TelescopePrompt = true,
+    help = true,
+    lazy = true,
+    mason = true,
+    qf = true,
+    checkhealth = true,
+    alpha = true,
+}
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "*",
+    callback = function(args)
+        if excluded_filetypes[vim.bo[args.buf].filetype] then
+            return
+        end
+        if vim.bo[args.buf].buftype ~= "" then
+            return -- skip non-file buffers (terminals, prompts, etc.)
+        end
+        vim.lsp.start(vim.lsp.config.harper_ls, { bufnr = args.buf })
+    end,
+})
+
 local lsps = {
     "lua_ls",
     "clangd",
@@ -60,6 +120,7 @@ local lsps = {
     "rust_analyzer",
     "texlab",
     "intelephense",
+    "harper_ls",
 }
 
 for _, v in ipairs(lsps) do

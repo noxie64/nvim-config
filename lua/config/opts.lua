@@ -1,17 +1,15 @@
-NVIM_THEME = require('config.utils').NVIM_THEME
-
 local opt = vim.opt
 local o = vim.o
 
 opt.fillchars = {
-  fold = " ",
-  foldsep = " ",
-  foldopen = "",
-  foldclose = "",
-  vert = "│",
-  eob = " ",
-  msgsep = "‾",
-  diff = "╱",
+    fold = " ",
+    foldsep = " ",
+    foldopen = "",
+    foldclose = "",
+    vert = "│",
+    eob = " ",
+    msgsep = "‾",
+    diff = "╱",
 }
 
 -- Time in milliseconds to wait for a mapped sequence to complete,
@@ -25,15 +23,8 @@ opt.mouse = ""
 -- colorscheme
 vim.o.background = "dark"
 vim.o.termguicolors = true
-colorscheme = ""
 
-
-if NVIM_THEME ~= nil then
-    colorscheme = NVIM_THEME
-elseif NVIM_THEME == nil then
-    colorscheme = 'molokai'
-end
-
+local colorscheme = require("config.colorscheme")
 local isOK, err = pcall(vim.cmd, "colorscheme " .. colorscheme)
 if not isOK then
     vim.notify(err, vim.log.levels.ERROR, { timeout = 5000 })

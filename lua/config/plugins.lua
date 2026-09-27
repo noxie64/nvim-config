@@ -119,6 +119,9 @@ local plugin_spec = {
         },
     },
 
+    --   spell-checking   --
+    { "mfussenegger/nvim-lint" },
+
     ---------------
     --   Other   --
     ---------------

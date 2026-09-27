@@ -1,3 +1,4 @@
+require('config.colorscheme')
 require('config.remap')
 require('config.lazy')
 require('config.opts')

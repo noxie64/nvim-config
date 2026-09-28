@@ -14,8 +14,8 @@ snippet = {
   end,
 },
 mapping = cmp.mapping.preset.insert({
-  ['<C-k>'] = cmp.mapping.scroll_docs(-4),
-  ['<C-j>'] = cmp.mapping.scroll_docs(4),
+  ['<A-K>'] = cmp.mapping.scroll_docs(-4),
+  ['<A-J>'] = cmp.mapping.scroll_docs(4),
   ['<A-k>'] = cmp.mapping.select_prev_item(),
   ['<A-j>'] = cmp.mapping.select_next_item(),
   ['<C-Space>'] = cmp.mapping.complete(),

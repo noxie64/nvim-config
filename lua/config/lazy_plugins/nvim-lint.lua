@@ -10,12 +10,18 @@ local excluded_filetypes = {
     alpha = true,
     lazy = true,
 }
+
+
+require('lint').linters_by_ft = {
+    typescript = { 'oxlint' },
+    javascript = { 'oxlint' }
+}
+
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
     callback = function()
         if excluded_filetypes[vim.bo.filetype] then
             return
         end
         require("lint").try_lint()
-        require("lint").try_lint("cspell")
     end,
 })

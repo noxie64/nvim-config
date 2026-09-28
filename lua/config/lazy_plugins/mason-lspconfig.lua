@@ -79,18 +79,6 @@ vim.lsp.config("harper_ls", {
     },
 })
 
-local excluded_filetypes = {
-    ["neo-tree"] = true,
-    NvimTree = true,
-    TelescopePrompt = true,
-    help = true,
-    lazy = true,
-    mason = true,
-    qf = true,
-    checkhealth = true,
-    alpha = true,
-}
-
 local lsps_for_activation = {
     "lua_ls",
     "clangd",
@@ -110,9 +98,29 @@ for _, v in ipairs(lsps_for_activation) do
     vim.lsp.enable(v)
 end
 
+-- manually start harper_ls and set root-dir
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
     callback = function(args)
+        local excluded_filetypes = {
+            ["neo-tree"] = true,
+            NvimTree = true,
+            TelescopePrompt = true,
+            help = true,
+            lazy = true,
+            mason = true,
+            qf = true,
+            checkhealth = true,
+            alpha = true,
+        }
+
+        if excluded_filetypes[vim.bo[args.buf].filetype] then
+            return
+        end
+        if vim.bo[args.buf].buftype ~= "" then
+            return
+        end
+
         local client_id = vim.lsp.start(
             vim.tbl_extend("force", vim.lsp.config.harper_ls, {
                 root_dir = vim.fs.root(args.buf, { ".git" }) or vim.fn.getcwd(), -- manually set root-dir
@@ -121,7 +129,6 @@ vim.api.nvim_create_autocmd("FileType", {
         )
     end,
 })
-
 
 require("mason-lspconfig").setup({
     ensure_installed = lsps_for_activation,

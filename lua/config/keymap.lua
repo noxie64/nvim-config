@@ -73,7 +73,7 @@ map("n", "f", vim.lsp.buf.format, opts)
 map("n", "gu", vim.lsp.buf.references, opts)
 map("n", "<leader>r", function()
     return ":IncRename " .. vim.fn.expand("<cword>")
-end, { expr = true })
+end, { expr = true, silent = true })
 
 -- code actions
 map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)

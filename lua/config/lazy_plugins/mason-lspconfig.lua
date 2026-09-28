@@ -34,10 +34,6 @@ vim.lsp.config("bashls", {
 vim.lsp.config("ts_ls", {
     init_options = {
         maxTsServerMemory = 4096,
-        tsserver = {
-            logDirectory = "/tmp/tsserver",
-            logVerbosity = "verbose",
-        },
     },
     settings = {
         typescript = {
@@ -95,20 +91,7 @@ local excluded_filetypes = {
     alpha = true,
 }
 
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "*",
-    callback = function(args)
-        if excluded_filetypes[vim.bo[args.buf].filetype] then
-            return
-        end
-        if vim.bo[args.buf].buftype ~= "" then
-            return -- skip non-file buffers (terminals, prompts, etc.)
-        end
-        vim.lsp.start(vim.lsp.config.harper_ls, { bufnr = args.buf })
-    end,
-})
-
-local lsps = {
+local lsps_for_activation = {
     "lua_ls",
     "clangd",
     "html",
@@ -120,14 +103,27 @@ local lsps = {
     "rust_analyzer",
     "texlab",
     "intelephense",
-    "harper_ls",
+    -- "harper_ls", -- mnually activated
 }
 
-for _, v in ipairs(lsps) do
+for _, v in ipairs(lsps_for_activation) do
     vim.lsp.enable(v)
 end
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "*",
+    callback = function(args)
+        local client_id = vim.lsp.start(
+            vim.tbl_extend("force", vim.lsp.config.harper_ls, {
+                root_dir = vim.fs.root(args.buf, { ".git" }) or vim.fn.getcwd(), -- manually set root-dir
+            }),
+            { bufnr = args.buf }
+        )
+    end,
+})
+
+
 require("mason-lspconfig").setup({
-    ensure_installed = lsps,
+    ensure_installed = lsps_for_activation,
     -- automatic_enable = true is the default: installed servers get vim.lsp.enable()'d
 })

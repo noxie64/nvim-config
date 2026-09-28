@@ -1,8 +1,10 @@
 local map = vim.keymap.set
 local opts = { silent = true, noremap = true }
 
+local M = {}
+
 -- chr-wrapper
-function wrap(padd)
+local function wrap(padd)
     local function read_chr(wrapper_key_start)
         local wrapper_key_end = wrapper_key_start
 
@@ -84,3 +86,7 @@ function wrap(padd)
 
     vim.api.nvim_feedkeys(vim.keycode('<ESC>'), 'n', true)
 end
+
+M.wrap = wrap
+
+return M

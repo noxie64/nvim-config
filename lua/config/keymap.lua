@@ -71,7 +71,10 @@ map("n", "gi", vim.lsp.buf.implementation, opts)
 map("n", "K", vim.lsp.buf.hover, opts)
 map("n", "f", vim.lsp.buf.format, opts)
 map("n", "gu", vim.lsp.buf.references, opts)
-map("n", "<leader>r", vim.lsp.buf.rename, opts)
+map("n", "<leader>r", function()
+    return ":IncRename " .. vim.fn.expand("<cword>")
+end, { expr = true })
+
 -- code actions
 map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 
@@ -134,10 +137,10 @@ end, {
 })
 
 -- custom
--- map('x', 'W', function ()
---     wrap(" ")
--- end)
---
--- map('x', 'w', function ()
---     wrap("")
--- end)
+map('x', '<leader>W', function ()
+    custom.wrap(" ")
+end)
+
+map('x', '<leader>w', function ()
+    custom.wrap("")
+end)

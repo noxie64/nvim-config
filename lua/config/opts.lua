@@ -1,5 +1,6 @@
 local opt = vim.opt
 local o = vim.o
+local g = vim.g
 
 opt.fillchars = {
     fold = " ",
@@ -60,3 +61,6 @@ vim.o.showbreak = "↳ "
 
 -- set spell lang hallo
 opt.spelllang = { "de", "en" }
+
+-- enable lazydev for nvim-config-completion
+g.lazydev_enabled = true

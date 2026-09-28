@@ -46,10 +46,10 @@ local plugin_spec = {
         dependencies = { "nvim-lua/plenary.nvim" },
     },
     {
-        'junegunn/fzf',
+        "junegunn/fzf",
         run = function()
-            vim.fn['fzf#install']()
-        end
+            vim.fn["fzf#install"]()
+        end,
     },
     ---   file-browser for telescope   ---
     {
@@ -80,6 +80,16 @@ local plugin_spec = {
     "nvimtools/none-ls.nvim",
     "neovim/nvim-lspconfig",
     "jay-babu/mason-null-ls.nvim",
+    -- config-completion
+    {
+        "folke/lazydev.nvim",
+        ft = "lua",
+        opts = {
+            library = {
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
 
     --    Auto-complete   --
     "neovim/nvim-lspconfig",
@@ -112,15 +122,19 @@ local plugin_spec = {
 
     --   markdown-rendering   --
     {
-        'MeanderingProgrammer/render-markdown.nvim',
-        dependencies = { 'nvim-treesitter/nvim-treesitter' },
+        "MeanderingProgrammer/render-markdown.nvim",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
         opts = {
-            enabled = false
+            enabled = false,
         },
     },
 
     --   spell-checking   --
     { "mfussenegger/nvim-lint" },
+
+    --   renaming   --
+    "smjonas/inc-rename.nvim",
+    "stevearc/dressing.nvim",
 
     ---------------
     --   Other   --

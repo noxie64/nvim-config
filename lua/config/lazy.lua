@@ -33,7 +33,7 @@ require("lazy").setup({
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { require("config.colorscheme") } },
   -- automatically check for plugin updates
-  checker = { enabled = true },
+  checker = { enabled = true, notify = false },
   rocks = {
     enabled = true,
     root = vim.fn.stdpath("data") .. "/lazy-rocks",

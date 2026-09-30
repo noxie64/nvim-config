@@ -136,7 +136,7 @@ vim.api.nvim_create_autocmd("FileType", {
 local lsps_for_installation = {
     "jdtls"
 }
-table.insert(lsps_for_installation, lsps_for_activation)
+vim.list_extend(lsps_for_installation, lsps_for_activation)
 
 require("mason-lspconfig").setup({
     ensure_installed = lsps_for_installation,

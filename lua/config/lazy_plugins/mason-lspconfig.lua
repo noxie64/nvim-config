@@ -79,6 +79,9 @@ vim.lsp.config("harper_ls", {
     },
 })
 
+
+
+
 local lsps_for_activation = {
     "lua_ls",
     "clangd",
@@ -130,7 +133,12 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
+local lsps_for_installation = {
+    "jdtls"
+}
+table.insert(lsps_for_installation, lsps_for_activation)
+
 require("mason-lspconfig").setup({
-    ensure_installed = lsps_for_activation,
+    ensure_installed = lsps_for_installation,
     -- automatic_enable = true is the default: installed servers get vim.lsp.enable()'d
 })

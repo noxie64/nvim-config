@@ -1,4 +1,3 @@
-vim.notify("Hello from nvim-lint!")
 
 -- exclude menus and so on
 local excluded_filetypes = {

@@ -49,6 +49,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 
 -- enable line numbers
 opt.number = true
+vim.o.relativenumber = true
 
 -- clipboard
 opt.clipboard = "unnamedplus"

@@ -192,6 +192,8 @@ local plugin_spec = {
     },
     "Weissle/persistent-breakpoints.nvim",
     "mfussenegger/nvim-dap-python",
+    -- gui-components
+    "MunifTanjim/nui.nvim"
 }
 
 return plugin_spec

@@ -94,6 +94,7 @@ local lsps_for_activation = {
     "rust_analyzer",
     "texlab",
     "intelephense",
+    "oxlint"
     -- "harper_ls", -- mnually activated
 }
 

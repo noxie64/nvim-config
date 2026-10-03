@@ -193,7 +193,13 @@ local plugin_spec = {
     "Weissle/persistent-breakpoints.nvim",
     "mfussenegger/nvim-dap-python",
     -- gui-components
-    "MunifTanjim/nui.nvim"
+    "MunifTanjim/nui.nvim",
+    -- surrounding
+    {
+        "kylechui/nvim-surround",
+        version = "^4.0.0",
+        event = "VeryLazy",
+    }
 }
 
 return plugin_spec

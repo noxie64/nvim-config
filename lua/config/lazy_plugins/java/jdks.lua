@@ -5,7 +5,7 @@ local JDK_FILE = NVIM_JAVA_DIR .. "/jdks.json"
 
 local M = { JDKS = {} }
 
-function create_dir()
+local function create_dir()
     local dir_stat = vim.uv.fs_stat(NVIM_JAVA_DIR)
     if not (dir_stat and dir_stat.type == "directory") then
         vim.fn.mkdir(NVIM_JAVA_DIR, "p")
@@ -18,7 +18,10 @@ local function load_jdks()
     local jdk_file_stat = vim.uv.fs_stat(JDK_FILE)
     if jdk_file_stat and jdk_file_stat.type == "file" then
         local f = io.open(JDK_FILE, "r")
-        M.JDKS = vim.json.decode(f:read("*all"))
+        local content = f:read("*all")
+        if vim.fn.trim(content) ~= "" then
+            M.JDKS = vim.json.decode(content)
+        end
         f:close()
     end
 end
@@ -31,12 +34,31 @@ function M.save_jdks()
     f:close()
 end
 
-vim.api.nvim_create_autocmd("VimEnter", {
-    callback = load_jdks,
-})
+load_jdks()
 
-vim.api.nvim_create_autocmd("VimLeave", {
-    callback = M.save_jdks,
-})
+function M.jdk_exists(name)
+    for _, row in ipairs(M.JDKS) do
+        return row.name == name
+    end
+
+    return false
+end
+
+function M.set_default(name)
+    for _, row in ipairs(M.JDKS) do
+        if row.name == name then
+            name.default = true
+        end
+    end
+end
+
+function M.add_jdk(name, path)
+    M.JDKS[name] = {
+        name = name,
+        path = path,
+        default = #M.JDKS == 0,
+    }
+    M.save_jdks()
+end
 
 return M

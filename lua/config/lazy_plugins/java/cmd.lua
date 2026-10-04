@@ -1,8 +1,8 @@
-local jdk_manager = require('config.lazy_plugins.java.jdks')
+local JdkManager = require('config.lazy_plugins.java.jdks')
+local GUI = require("config.lazy_plugins.java.gui")
 
 -- create user-commands
 vim.api.nvim_create_user_command("JavaAddJDK", function(opts)
-    vim.notify(vim.inspect(opts))
     if #opts.fargs ~= 2 then
         vim.notify("Copy requires exactly 2 arguments", vim.log.levels.ERROR)
         return
@@ -10,8 +10,14 @@ vim.api.nvim_create_user_command("JavaAddJDK", function(opts)
 
     local name = opts.fargs[1]
     local path = opts.fargs[2]
-    table.insert(jdk_manager.JDKS, { name = name, path = path})
-    jdk_manager.save_jdks()
+
+    if JdkManager.jdk_exists(name) then
+        vim.notify("JDK with name " .. name .. " already exists!", vim.log.levels.ERROR)
+        return
+    end
+
+    JdkManager.add_jdk(name, path)
+    vim.notify("Added jdk " .. name .. "!")
 end, {
     nargs = "+",
     complete = function(arglead, cmdline, cursorpos)
@@ -30,3 +36,7 @@ end, {
         return {}
     end,
 })
+
+vim.api.nvim_create_user_command("JavaJDKMenu", function(opts)
+    GUI.show_menu()
+end, {})

@@ -52,10 +52,11 @@ function M.set_default(name)
     end
 end
 
-function M.add_jdk(name, path)
+function M.add_jdk(name, path, version)
     M.JDKS[name] = {
         name = name,
         path = path,
+        version = version,
         default = #M.JDKS == 0,
     }
     M.save_jdks()

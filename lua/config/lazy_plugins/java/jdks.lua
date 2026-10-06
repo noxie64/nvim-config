@@ -78,4 +78,26 @@ function M.delete_jdk(name)
     M.save_jdks()
 end
 
+function M.get_default_jdk()
+    if M.serializable.default_jdk == nil then
+        error("No default jdk set!")
+    end
+
+    return M.serializable.JDKS[M.serializable.default_jdk]
+end
+
+function M.to_jdtls_jdks()
+    local jdtls_jdks = {}
+
+    for k, v in pairs(M.serializable.JDKS) do
+        local version = v.version
+        table.insert(jdtls_jdks, {
+            name = "JavaSE-" .. (version < 10 and "1." ..  version or version),
+            path = v.path
+        })
+    end
+
+    return jdtls_jdks
+end
+vim.notify(vim.inspect(M.to_jdtls_jdks()))
 return M

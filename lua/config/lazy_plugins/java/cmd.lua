@@ -4,17 +4,16 @@ local GUI = require("config.lazy_plugins.java.gui")
 local subcommands = {
     ["jdk-add"] = {
         cmd = function(opts)
-            if #opts.fargs ~= 3 then
-                vim.notify("Copy requires exactly 3 arguments", vim.log.levels.ERROR)
+            if #opts.fargs ~= 4 then
+                vim.notify("jdk-add requires exactly 4 arguments", vim.log.levels.ERROR)
                 return
             end
 
-            local name = opts.fargs[1]
-            local version = opts.fargs[2]
-            local path = opts.fargs[3]
+            local name = opts.fargs[2]
+            local version = opts.fargs[3]
+            local path = opts.fargs[4]
 
             local version_parsed = tonumber(version)
-            vim.notify(vim.inspect(version_parsed))
             if version_parsed ~= nil and version_parsed >= 8 then
                 if JdkManager.jdk_exists(name) then
                     vim.notify("JDK with name " .. name .. " already exists!", vim.log.levels.ERROR)
@@ -82,6 +81,3 @@ end, {
         return subcommands[subcommand].cmplt(arg_lead, cmd_line, cursorpos)
     end,
 })
-
-vim.api.nvim_create_user_command("JavaJDKMenu", function(opts)
-end, {})

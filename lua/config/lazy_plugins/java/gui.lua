@@ -28,17 +28,20 @@ end
 
 local M = {}
 function M.show_menu()
-    if #vim.fn.keys(JdkManager.JDKS) == 0 then
-        vim.notify("No jdks saved yet!")
+    vim.notify(vim.inspect(JdkManager))
+    if next(JdkManager.serializable.JDKS) == nil then
+        vim.notify("No jdks saved yet!", vim.log.levels.ERROR)
         return
     end
 
     local function to_menu_items(jdks)
         local transformed = {}
         for k, v in pairs(jdks) do
+            local name = k .. " [v" .. v.version .. "]"
+            vim.notify(JdkManager.serializable.default_jdk)
             table.insert(
                 transformed,
-                Menu.item(v.default and k .. " *" or k, {
+                Menu.item((JdkManager.serializable.default_jdk == k and "* " .. name or name), {
                     name = k,
                 })
             )
@@ -64,7 +67,7 @@ function M.show_menu()
             winhighlight = "Normal:Normal,FloatBorder:Normal",
         },
     }, {
-        lines = to_menu_items(JdkManager.JDKS),
+        lines = to_menu_items(JdkManager.serializable.JDKS),
         max_width = 20,
         keymap = {
             focus_next = { "j", "<Down>", "<Tab>" },

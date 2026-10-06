@@ -28,21 +28,20 @@ end
 
 local M = {}
 function M.show_menu()
-    vim.notify(vim.inspect(JdkManager))
     if next(JdkManager.serializable.JDKS) == nil then
         vim.notify("No jdks saved yet!", vim.log.levels.ERROR)
         return
     end
 
-    local function to_menu_items(jdks)
+    local function build_items()
         local transformed = {}
-        for k, v in pairs(jdks) do
+        for k, v in pairs(JdkManager.serializable.JDKS) do
             local name = k .. " [v" .. v.version .. "]"
-            vim.notify(JdkManager.serializable.default_jdk)
             table.insert(
                 transformed,
                 Menu.item((JdkManager.serializable.default_jdk == k and "* " .. name or name), {
                     name = k,
+                    name_ver = name,
                 })
             )
         end
@@ -52,6 +51,7 @@ function M.show_menu()
 
     local menu = Menu({
         position = "50%",
+        zindex = 1,
         size = {
             width = 25,
             height = 5,
@@ -67,21 +67,53 @@ function M.show_menu()
             winhighlight = "Normal:Normal,FloatBorder:Normal",
         },
     }, {
-        lines = to_menu_items(JdkManager.serializable.JDKS),
+        lines = build_items(),
         max_width = 20,
         keymap = {
             focus_next = { "j", "<Down>", "<Tab>" },
             focus_prev = { "k", "<Up>", "<S-Tab>" },
-            close = { "<Esc>", "<C-c>" },
-            submit = { "<CR>", "<Space>" },
+            close = { "<Esc>", "q" },
+            submit = {},
         },
-        on_close = function()
-            print("Menu Closed!")
-        end,
         on_submit = function(item)
             print("Menu Submitted: ", item.text)
         end,
     })
+
+    local function rerender()
+        menu.tree:set_nodes(build_items())
+        menu.tree:render()
+    end
+
+    menu:map("n", "<CR>", function()
+        local item = menu.tree:get_node()
+        local name = item.name
+        if name == JdkManager.serializable.default_jdk then
+            return
+        end
+        JdkManager.set_default(name)
+        rerender()
+    end)
+
+    menu:map("n", "D", function()
+        local item = menu.tree:get_node()
+        vim.ui.input({
+            prompt = "Delete " .. item.name_ver .. " (y/n)?",
+        }, function(input)
+            if input ~= "y" then
+                vim.notify("Aborted!")
+                return
+            end
+
+            JdkManager.delete_jdk(item.name)
+            vim.notify("JDK " .. item.name_ver .. " was removed from jdk-cache!")
+            if next(JdkManager.serializable.JDKS) == nil then
+                menu:unmount()
+            else
+                rerender()
+            end
+        end)
+    end)
 
     menu:mount()
 end

@@ -55,7 +55,7 @@ local subcommands = {
 }
 
 -- create user-commands
-vim.api.nvim_create_user_command("Java", function(opts)
+vim.api.nvim_create_user_command("java", function(opts)
     local subcommand = opts.fargs[1]
     if ! subcommands[subcommand] then
         vim.notify("Invalid subcommand!", vim.log.levels.ERROR)

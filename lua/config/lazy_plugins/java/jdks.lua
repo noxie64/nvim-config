@@ -25,7 +25,6 @@ local function load_jdks()
         local content = f:read("*all")
         if vim.fn.trim(content) ~= "" then
             M.serializable = vim.json.decode(content)
-            vim.notify(vim.inspect(M.serializable))
         end
         f:close()
     end
@@ -50,6 +49,7 @@ function M.set_default(name)
         error("JDK " .. name .. " doesn't exist!")
     end
     M.serializable.default_jdk = name
+    M.save_jdks()
     vim.notify("Set " .. name .. " as the default jdk!")
 end
 
@@ -62,6 +62,19 @@ function M.add_jdk(name, path, version)
         path = path,
         version = version,
     }
+    M.save_jdks()
+end
+
+function M.delete_jdk(name)
+    if not M.jdk_exists(name) then
+        error("JDK " .. name .. " doesn't exist!")
+    end
+
+    M.serializable.JDKS[name] = nil
+    if M.serializable.default_jdk == name then
+        M.serializable.default_jdk = nil
+    end
+
     M.save_jdks()
 end
 

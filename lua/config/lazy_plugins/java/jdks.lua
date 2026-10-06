@@ -89,7 +89,7 @@ end
 function M.to_jdtls_jdks()
     local jdtls_jdks = {}
 
-    for k, v in pairs(M.serializable.JDKS) do
+    for _, v in pairs(M.serializable.JDKS) do
         local version = v.version
         table.insert(jdtls_jdks, {
             name = "JavaSE-" .. (version < 10 and "1." ..  version or version),
@@ -99,5 +99,4 @@ function M.to_jdtls_jdks()
 
     return jdtls_jdks
 end
-vim.notify(vim.inspect(M.to_jdtls_jdks()))
 return M

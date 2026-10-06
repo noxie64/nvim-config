@@ -51,6 +51,32 @@ local subcommands = {
         cmplt = function()
             return {}
         end
+    },
+    ["download-lombok"] = {
+        cmd = function()
+            local lombok_dir = vim.fn.stdpath("data") .. "/lombok"
+            local lombok = lombok_dir .. "/lombok.jar"
+
+            if vim.fn.filereadable(lombok) == 0 then
+                vim.fn.mkdir(lombok_dir, "p")
+                vim.notify("Downloading lombok.jar...")
+                local result = vim.system({
+                    "curl", "-fsSL",
+                    "https://projectlombok.org/downloads/lombok.jar",
+                    "-o", lombok,
+                }):wait()
+
+                if result.code ~= 0 then
+                    vim.notify("Lombok download failed: " .. (result.stderr or ""), vim.log.levels.ERROR)
+                    os.remove(lombok)
+                    return
+                end
+                vim.notify("Lombok successfully downloaded!")
+            end
+        end,
+        cmplt = function()
+
+        end
     }
 }
 

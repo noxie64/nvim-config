@@ -11,7 +11,7 @@ local plugin_spec = {
     },
     "savq/melange-nvim",
     "yorumicolors/yorumi.nvim",
-    { "catppuccin/nvim",       name = "catppuccin", priority = 1000 },
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     "mistweaverco/retro-theme.nvim",
     "tomasr/molokai",
     "ellisonleao/gruvbox.nvim",
@@ -64,7 +64,7 @@ local plugin_spec = {
         opts = {},
         init = function()
             vim.o.foldcolumn = "1" -- '0' is not bad
-            vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
+            vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
             vim.o.foldlevelstart = 99
             vim.o.foldenable = true
         end,
@@ -93,6 +93,8 @@ local plugin_spec = {
     -- java
     "mfussenegger/nvim-jdtls",
 
+    -- java
+    { "mfussenegger/nvim-jdtls", ft = "java" },
     --    Auto-complete   --
     "neovim/nvim-lspconfig",
     "hrsh7th/cmp-nvim-lsp",
@@ -123,14 +125,14 @@ local plugin_spec = {
     "machakann/vim-sandwich",
 
     --   markdown-rendering   --
-    {
-        "MeanderingProgrammer/render-markdown.nvim",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-        opts = {
-            enabled = false,
-        },
-    },
-
+    -- {
+    --     "MeanderingProgrammer/render-markdown.nvim",
+    --     dependencies = { "nvim-treesitter/nvim-treesitter" },
+    --     opts = {
+    --         enabled = false,
+    --     },
+    -- },
+    --
     --   spell-checking   --
     { "mfussenegger/nvim-lint" },
 

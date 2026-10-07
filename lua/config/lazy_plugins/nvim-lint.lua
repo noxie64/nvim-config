@@ -14,7 +14,7 @@ local excluded_filetypes = {
 require('lint').linters_by_ft = {
     typescript = { 'oxlint' },
     javascript = { 'oxlint' },
-    sql = { 'sqlfluf '}
+    sql = { 'sqlfluff' }
 }
 
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {

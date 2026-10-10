@@ -91,10 +91,7 @@ local plugin_spec = {
         },
     },
     -- java
-    "mfussenegger/nvim-jdtls",
-
-    -- java
-    { "mfussenegger/nvim-jdtls", ft = "java" },
+     "mfussenegger/nvim-jdtls",
     --    Auto-complete   --
     "neovim/nvim-lspconfig",
     "hrsh7th/cmp-nvim-lsp",

@@ -21,4 +21,13 @@ local config = {
     },
 }
 
-jdtls.start_or_attach(config)
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "java",
+    callback = function(args)
+        local name = vim.api.nvim_buf_get_name(args.buf)
+        if name == "" or not name:match("^/") then
+            return
+        end
+        require("jdtls").start_or_attach(config)
+    end,
+})
